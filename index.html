@@ -230,18 +230,24 @@
     <h2>Leg-uit-vragen beantwoorden</h2>
     <p>Bij een leg-uit-vraag werk je in <b>drie stappen</b>:</p>
     <ol>
-      <li><b>Puntwoorden herkennen</b> - welke woorden in de vraag moet je uitleggen?</li>
-      <li><b>Puntwoorden uitleggen</b> - leg elk puntwoord uit en koppel het aan de situatie in India.</li>
-      <li><b>Concluderend antwoord</b> - trek een conclusie die antwoord geeft op de vraag (begin met <i>Daarom...</i>, <i>Dus...</i> of <i>Hierdoor...</i>).</li>
+      <li><b>Stap 1: Puntwoorden herkennen</b> - welke kernbegrippen in de vraag moet je uitleggen?</li>
+      <li><b>Stap 2: De inhoud uitwerken</b>:
+        <ul>
+          <li><b>2a. Begrippen uitleggen</b> - leg elk kernbegrip uit.</li>
+          <li><b>2b. Ontbrekende schakel</b> - bedenk welke tussenstap of situatie in India nodig is om de begrippen te verbinden met je conclusie.</li>
+        </ul>
+      </li>
+      <li><b>Stap 3: Concluderend antwoord</b> - trek een conclusie die direct antwoord geeft op de vraag (begin met <i>Daarom...</i>, <i>Dus...</i> of <i>Hierdoor...</i>).</li>
     </ol>
     <div class="note">Let op: een antwoord begint <b>nooit</b> met <b>"Omdat"</b>. Je schrijft volledige zinnen.</div>
     <details style="margin-top:12px">
       <summary style="cursor:pointer;font-weight:600;color:var(--primary)">Bekijk een voorbeeld (biologie)</summary>
       <div class="example" style="margin-top:10px">
         <p><b>Vraag:</b> Leg uit waarom bij een <span class="pill">diepe wond</span> de kans op een <span class="pill">infectie</span> groter is dan bij een <span class="pill">schaafwond</span>.</p>
-        <p><b>Stap 1 - puntwoorden:</b> diepe wond, schaafwond, infectie.</p>
-        <p><b>Stap 2 - uitleg:</b> Bij een diepe wond kunnen bacteriën eerder bij een bloedvat komen. Een schaafwond is oppervlakkig. Een infectie wordt veroorzaakt door een overschot aan bacteriën.</p>
-        <p><b>Stap 3 - conclusie:</b> Daarom levert een diepe wond een grotere kans op een infectie.</p>
+        <p><b>Stap 1 - Puntwoorden:</b> diepe wond, schaafwond, infectie.</p>
+        <p><b>Stap 2a - Begrippen uitleggen:</b> Een schaafwond is oppervlakkig; een diepe wond beschadigt dieper gelegen weefsels en bloedvaten. Een infectie ontstaat wanneer ziekteverwekkende bacteriën zich in het lichaam vermenigvuldigen.</p>
+        <p><b>Stap 2b - Ontbrekende schakel:</b> Bacteriën kunnen via een diepe wondopening veel dieper en sneller binnendringen in de bloedbaan dan bij een beschadigde opperhuid.</p>
+        <p><b>Stap 3 - Conclusie:</b> Daarom is bij een diepe wond de kans op een infectie groter dan bij een schaafwond.</p>
       </div>
     </details>
   </div>
@@ -509,21 +515,31 @@
     ],
     vragen: [
       { id:"q1",
-        text:"Leg uit waarom India bij de onafhankelijkheid in 1947 een {federatie} werd met een indeling in {deelstaten}.",
+        text:"Leg uit waarom India bij de onafhankelijkheid in 1947 een {federatie} werd met een indeling in {deelstaten}. Betrek in je antwoord de samenstelling van de bevolking.",
         pw:[
           {kw:["centrale","regering","eigen regering","deelsta"], hint:"Wat is een federatie?"},
           {kw:["zelfbestuur","autonomie","eigen wet","regels","ministerie","hoofdstad","groepen","volken"], hint:"Wat is een deelstaat en wie wonen erin?"}
         ],
+        schakel: {
+          title: "Samenstelling van de bevolking (cultureel mozaïek)",
+          prompt: "Welk kenmerk van de bevolking in India maakte juist een federatie met deelstaten noodzakelijk?",
+          kw: ["mozaïek","volken","talen","cultuur","godsdienst","religie","groepen","verschill","divers"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"Een <span class='pw'>federatie</span> is een land met één centrale regering met daarnaast in elke deelstaat een eigen regering. Een <span class='pw'>deelstaat</span> is een gebied dat voor een deel zelfbestuur heeft, met een eigen hoofdstad, ministeries en eigen wetten en regels. In India is een enorme variatie aan volken, talen en religies; deze verschillende groepen wonen in verschillende deelstaten. Daarom werd India bij de onafhankelijkheid een federatie: zo kon rekening worden gehouden met het culturele mozaïek van het land."
+        model:"<b>Stap 2a (begrippen):</b> Een <span class='pw'>federatie</span> is een land met één centrale regering met daarnaast in elke deelstaat een eigen regering. Een <span class='pw'>deelstaat</span> is een gebied binnen een land dat voor een deel zelfbestuur heeft (met een eigen hoofdstad, wetten en regels).<br><b>Stap 2b (ontbrekende schakel):</b> India kent een enorme diversiteit in de samenstelling van de bevolking: een cultureel mozaïek van honderden volken, talen en religies die in specifieke regio's wonen.<br><b>Stap 3 (conclusie):</b> Daarom koos India bij de onafhankelijkheid in 1947 voor een federatie met deelstaten: zo kregen de verschillende bevolkingsgroepen eigen autonomie en kon de eenheid van het land bewaard blijven."
       },
       { id:"q2",
         text:"Leg uit waarom het Engels in India de {lingua franca} is en niet het Hindi.",
         pw:[
           {kw:["voertaal","moedertaal","verschillende","grote schaal","begrijpen","communic"], hint:"Wat betekent het begrip lingua franca?"}
         ],
+        schakel: {
+          title: "Taalsituatie in India (Hindi vs. Engels)",
+          prompt: "Welke situatie met talen in India zorgt ervoor dat het Engels als overkoepelende taal gekozen is en niet het Hindi?",
+          kw: ["hindi","zuid","achtergesteld","moedertaal","neutraal","talen","honderden"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"Een <span class='pw'>lingua franca</span> is een taal die op grote schaal als voertaal wordt gebruikt door mensen met verschillende moedertalen om met elkaar te kunnen communiceren. Hoewel twee derde van de Indiërs Hindi spreekt, is het meestal niet hun moedertaal en vooral in het zuiden voelen mensen zich achtergesteld bij het Hindi. Daarom fungeert het Engels als neutrale overkoepelende taal (lingua franca) om de taalverschillen te overbruggen en niet het Hindi."
+        model:"<b>Stap 2a (begrip):</b> Een <span class='pw'>lingua franca</span> is een taal die op grote schaal als voertaal wordt gebruikt door mensen met verschillende moedertalen om met elkaar te communiceren.<br><b>Stap 2b (ontbrekende schakel):</b> In India worden honderden talen gesproken; voor een groot deel van de bevolking (vooral in het zuiden) is Hindi niet de moedertaal en zij ervaren Hindi als een achterstelling. Het neutrale Engels overbrugt deze regionale tegenstellingen.<br><b>Stap 3 (conclusie):</b> Daarom fungeert het Engels in India als lingua franca om de taalverschillen te overbruggen, en niet het Hindi."
       },
       { id:"q3",
         text:"Leg uit waarom het {kastenstelsel} zorgt voor hardnekkige {sociale ongelijkheid} die ook na 1950 doorwerkt.",
@@ -531,16 +547,26 @@
           {kw:["geboorte","geboren","groep","kaste","veranderen","beroep","trouwen"], hint:"Hoe werkt het kastenstelsel?"},
           {kw:["welvaart","kansen","ontwikkelingskansen","verschillen","praktijk","traditie"], hint:"Wat betekent sociale ongelijkheid en waarom werkt dit door na 1950?"}
         ],
+        schakel: {
+          title: "Doorgifte van status, huwelijk en subkasten (jati/dalits)",
+          prompt: "Welke sociale gewoonten en familietradities zorgen ervoor dat kaste ook na de wettelijke afschaffing in 1950 maatschappelijke kansen blijft bepalen?",
+          kw: ["traditie","huwelijk","trouwen","jati","dalit","afkomst","praktijk","status","ouders","geboorte"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"Het <span class='pw'>kastenstelsel</span> is de indeling van de samenleving in vaste sociale groepen; vanaf je geboorte ligt je kaste vast, je kunt niet wisselen en het bepaalt je beroep en huwelijkspartner. <span class='pw'>Sociale ongelijkheid</span> zijn grote verschillen in welvaart en ontwikkelingskansen tussen groepen. Hoewel het stelsel in 1950 officieel is afgeschaft, houden Indiërs in de praktijk nog sterk vast aan oeroude tradities. Daarom zorgt het kastenstelsel nog altijd voor grote sociale ongelijkheid: iemands maatschappelijke kansen worden nog steeds bepaald door zijn geboorte."
+        model:"<b>Stap 2a (begrippen):</b> Het <span class='pw'>kastenstelsel</span> is de indeling van de samenleving in vaste sociale groepen (kasten en jati); vanaf je geboorte ligt je kaste vast. <span class='pw'>Sociale ongelijkheid</span> betekent grote verschillen in welvaart en ontwikkelingskansen tussen groepen.<br><b>Stap 2b (ontbrekende schakel):</b> Hoewel het stelsel in 1950 wettelijk is afgeschaft, houden families vast aan tradities: ouders arrangeren huwelijken binnen de eigen kaste en dalits (onaanraakbaren) worden op het platteland nog altijd uitgesloten van betere banen.<br><b>Stap 3 (conclusie):</b> Daarom zorgt het kastenstelsel nog altijd voor hardnekkige sociale ongelijkheid: iemands maatschappelijke kansen worden in de praktijk nog steeds bepaald door zijn geboorte."
       },
       { id:"q4",
         text:"Leg uit waardoor in Indiase steden het {geboortecijfer} sneller daalt dan op het platteland.",
         pw:[
           {kw:["levendgeborenen","duizend","jaar","gemiddeld","aantal kinderen"], hint:"Wat betekent het begrip geboortecijfer?"}
         ],
+        schakel: {
+          title: "Verschil in leefomstandigheden en positie van de vrouw",
+          prompt: "Welke verschillen in scholing, kosten en werk tussen stad en platteland verklaren dat stedelingen minder kinderen krijgen?",
+          kw: ["vrouwen","opleiding","onderwijs","kosten","werk","family planning","boerderij","platteland","duur"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"Het <span class='pw'>geboortecijfer</span> is het gemiddelde aantal levendgeborenen per duizend inwoners per jaar. In steden houdt de bevolking minder vast aan oeroude tradities, zijn vrouwen beter opgeleid, trouwen ze later en is er meer toegang tot anticonceptie; op het platteland dienen kinderen nog vaker als bron van inkomsten en oudedagsverzorging. Daarom daalt het geboortecijfer in de steden veel sneller dan op het platteland, waardoor de demografische kloof tussen stad en platteland groeit."
+        model:"<b>Stap 2a (begrip):</b> Het <span class='pw'>geboortecijfer</span> is het gemiddelde aantal levendgeborenen per duizend inwoners per jaar.<br><b>Stap 2b (ontbrekende schakel):</b> In de steden zijn vrouwen beter opgeleid, trouwen ze later, hebben ze meer toegang tot anticonceptie en kosten kinderen veel geld (huisvesting, school), terwijl kinderen op het platteland nog dienen als arbeidskracht en oudedagsvoorziening.<br><b>Stap 3 (conclusie):</b> Daarom daalt het geboortecijfer in Indiase steden veel sneller dan op het platteland, waardoor de demografische kloof toeneemt."
       },
       { id:"q5",
         text:"Leg uit waarom een jonge bevolking leidt tot een hoge {groene druk} en wat het verband is met {demografische druk}.",
@@ -548,8 +574,13 @@
           {kw:["0-20","jongeren","productieven","20-65","verhouding","last"], hint:"Wat is groene druk en wie moet die last dragen?"},
           {kw:["productieve","niet-productieve","last","inkomen"], hint:"Wat betekent demografische druk?"}
         ],
+        schakel: {
+          title: "Verhouding tussen productieve en niet-productieve leeftijdsgroepen",
+          prompt: "Hoe beïnvloedt een grote groep 0- tot 20-jarigen de totale verhouding tussen werkenden en niet-werkenden?",
+          kw: ["productief","niet-productief","werken","werkenden","beroepsbevolking","jongeren","last","verdienen","onderhoud"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"De <span class='pw'>groene druk</span> is de verhouding tussen de groep van 0- tot 20-jarigen en de productieve groep van 20- tot 65-jarigen; in India is de helft van de bevolking jonger dan 25 jaar. De <span class='pw'>demografische druk</span> is de totale verhouding tussen de productieve en de niet-productieve leeftijdsgroepen. Omdat de jonge bevolking afhankelijk is van de werkenden voor voedsel en onderwijs, zorgt het grote aandeel kinderen voor een zware belasting op de werkende generatie. Daarom leidt de jonge leeftijdsopbouw in India tot een zeer hoge groene druk en een zware demografische druk op de werkenden."
+        model:"<b>Stap 2a (begrippen):</b> De <span class='pw'>groene druk</span> is de verhouding tussen de groep van 0- tot 20-jarigen en de groep van 20- tot 65-jarigen. De <span class='pw'>demografische druk</span> is de verhouding tussen de niet-productieven (0-20 en 65+) en de productieve leeftijdsgroep (20-65).<br><b>Stap 2b (ontbrekende schakel):</b> In een land met een jonge bevolking zoals India moet de productieve beroepsbevolking relatief veel kinderen onderhouden en voorzien van onderwijs en zorg, waardoor de groene druk het grootste deel van de totale druk uitmaakt.<br><b>Stap 3 (conclusie):</b> Daarom leidt een jonge bevolking tot een hoge groene druk, wat direct resulteert in een zware totale demografische druk op de werkende inwoners."
       },
       { id:"q6",
         text:"Leg uit waarom het koloniale verleden van India als {exploitatiekolonie} van het Britse {moederland} nog steeds merkbaar is in de samenleving.",
@@ -557,8 +588,13 @@
           {kw:["grondstoffen","voordeel","thee","katoen","jute","Europeanen","economisch"], hint:"Wat is een exploitatiekolonie en waarvoor werd India gebruikt?"},
           {kw:["gezag","Engeland","staat","bestuur","Britten"], hint:"Wat betekent moederland?"}
         ],
+        schakel: {
+          title: "Blijvende Britse erfenis in taal, bestuur en infrastructuur",
+          prompt: "Welke tastbare overblijfselen van het Britse bestuur bepalen het moderne India nog dagelijks?",
+          kw: ["engels","bestuur","spoor","spoorweg","grenzen","grondstoffen","erfenis","brits","handel"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"Een <span class='pw'>exploitatiekolonie</span> is een kolonie die door (meestal) Europeanen werd gebruikt om er zelf voordeel van te hebben door het winnen van grondstoffen zoals thee, katoen en jute. Het <span class='pw'>moederland</span> (Engeland) oefende het gezag uit over de kolonie en bracht honderden vorstendommen onder één centraal bestuur. Daarom is deze koloniale periode nog altijd merkbaar in India: de Britten legden het spoorwegnetwerk en de bestuurlijke grenzen aan en introduceerden het Engels, dat nu als lingua franca de honderden taalverschillen overbrugt."
+        model:"<b>Stap 2a (begrippen):</b> Een <span class='pw'>exploitatiekolonie</span> is een kolonie die door Europeanen gebruikt werd om er zelf economisch voordeel uit te halen (grondstoffen zoals thee en katoen). Het <span class='pw'>moederland</span> (Groot-Brittannië) oefende het centrale gezag uit.<br><b>Stap 2b (ontbrekende schakel):</b> Om grondstoffen te vervoeren en het enorme gebied te besturen legden de Britten een landelijk spoorwegnet aan en voerden ze het Engels in als bestuurstaal, waarmee honderden vorstendommen onder één systeem kwamen.<br><b>Stap 3 (conclusie):</b> Daarom is het koloniale verleden nog altijd merkbaar in India: de nationale grenzen, de infrastructuur en het gebruik van het Engels als lingua franca zijn directe erfenissen van het Britse bestuur."
       },
       { id:"q7",
         text:"Leg uit wat de relatie is tussen een {bevolkingsdiagram} en de {leeftijdsopbouw} van een land.",
@@ -566,24 +602,28 @@
           {kw:["staafdiagram","leeftijd","grafiek","vorm","staven"], hint:"Wat is een bevolkingsdiagram?"},
           {kw:["samenstelling","groepen","jongeren","productieven","ouderen","leeftijdsgroepen"], hint:"Wat betekent leeftijdsopbouw?"}
         ],
+        schakel: {
+          title: "Vorm van het diagram (piramide, granaat, urn) en toekomstige groei",
+          prompt: "Hoe laat de specifieke vorm van de staven in het diagram zien in welke fase van bevolkingsgroei een land verkeert?",
+          kw: ["piramide","granaat","urn","vorm","staven","basis","jongeren","groei","ontwikkeling"]
+        },
         concl:["daarom","dus","hierdoor","daardoor"],
-        model:"Een <span class='pw'>bevolkingsdiagram</span> is een staafdiagram waarin de samenstelling van de bevolking naar leeftijd en geslacht grafisch wordt weergegeven. De <span class='pw'>leeftijdsopbouw</span> is de verdeling van de bevolking in verschillende leeftijdsgroepen (zoals jongeren, productieven en ouderen). Uit de specifieke vorm van het diagram (piramide, granaat of urn) kun je direct aflezen of een bevolking snel groeit, stabiel blijft of krimpt. Daarom is een bevolkingsdiagram hét visuele hulpmiddel om in één oogopslag inzicht te krijgen in de leeftijdsopbouw en de demografische fase van een land."
+        model:"<b>Stap 2a (begrippen):</b> Een <span class='pw'>bevolkingsdiagram</span> is een staafdiagram waarin de samenstelling van de bevolking naar leeftijd en geslacht wordt weergegeven. De <span class='pw'>leeftijdsopbouw</span> is de verdeling van de inwoners over verschillende leeftijdscategorieën.<br><b>Stap 2b (ontbrekende schakel):</b> Aan de kenmerkende vorm van het diagram zie je direct de demografische fase: een piramidevorm toont een hoog geboortecijfer en snelle groei, een granaatvorm een stabiele bevolking, en een urnvorm een laag geboortecijfer met vergrijzing en bevolkingskrimp.<br><b>Stap 3 (conclusie):</b> Daarom is een bevolkingsdiagram hét visuele hulpmiddel om in één oogopslag de huidige leeftijdsopbouw en de toekomstige bevolkingsontwikkeling van een land af te lezen."
       }
     ]
   }
 };
 
-
 /* =========================================================
    STATE MANAGEMENT (PER PARAGRAAF IN EEN CENTRALE JSON)
    ========================================================= */
-const STORE_KEY = "geo-india-vwo-h5-v5";
+const STORE_KEY = "geo-india-vwo-h5-v6";
 let currentParId = "5.1";
 let state = freshState();
 
 function freshState(){
   return {
-    versie: 2,
+    versie: 3,
     hoofdstuk: "H5 India",
     naam: "",
     paragrafen: {},
@@ -600,7 +640,11 @@ function getParState(pid){
 
 function qState(qid){
   const ps = getParState(currentParId);
-  if(!ps.q[qid] || !Array.isArray(ps.q[qid].sel)) ps.q[qid] = {sel:[], pwChecked:false, pwOk:false, tries:0, expl:[], concl:"", passed:false, self:[false,false,false], done:false};
+  if(!ps.q[qid] || !Array.isArray(ps.q[qid].sel)) {
+    ps.q[qid] = {sel:[], pwChecked:false, pwOk:false, tries:0, expl:[], schakel:"", concl:"", passed:false, self:[false,false,false,false], done:false};
+  }
+  if(ps.q[qid].schakel === undefined) ps.q[qid].schakel = "";
+  if(!Array.isArray(ps.q[qid].self) || ps.q[qid].self.length < 4) ps.q[qid].self = [false,false,false,false];
   return ps.q[qid];
 }
 
@@ -674,27 +718,33 @@ function renderOverzicht(){
     <div class="grid2">
       ${par.theorieBlokken.map(b=>`
         <div class="card">
-          <h3>${esc(b.titel)}</h3>
-          <ul class="tight">
-            ${b.punten.map(p=>`<li>${p}</li>`).join("")}
-          </ul>
+          <h3>${esc(b.titel || "")}</h3>
+          ${b.tekst ? `<p>${b.tekst}</p>` : ""}
+          ${b.punten ? `<ul class="tight">${b.punten.map(p=>`<li>${p}</li>`).join("")}</ul>` : ""}
         </div>
       `).join("")}
     </div>
 
-    <div class="card">
-      <h3>Samenhang in één schema</h3>
-      <div class="schema">
-        ${par.schema.map(s=>`
-          <div><b>${esc(s.titel)}</b><br>${s.tekst}</div>
-        `).join("")}
+    ${par.schema ? `
+      <div class="card">
+        <h3>Samenhang in &eacute;&eacute;n schema</h3>
+        <div class="schema">
+          ${(Array.isArray(par.schema) ? par.schema : (par.schema.blokken||[])).map(s=>`
+            <div><b>${esc(s.titel || "")}</b><br>${s.tekst || ""}</div>
+          `).join("")}
+        </div>
       </div>
-    </div>
+    ` : ""}
 
     <div class="card">
       <h3>Alle begrippen van paragraaf ${esc(currentParId)}</h3>
       <table>
-        ${par.begrippen.map(([b,d])=>`<tr><td>${esc(b)}</td><td>${esc(d)}</td></tr>`).join("")}
+        <thead><tr><th>Begrip</th><th>Betekenis</th></tr></thead>
+        <tbody>
+          ${par.begrippen.map(([b,d])=>`
+            <tr><td>${esc(b)}</td><td>${esc(d)}</td></tr>
+          `).join("")}
+        </tbody>
       </table>
     </div>
   `;
@@ -707,16 +757,19 @@ function renderOverzicht(){
 let fcDeck=[], fcIdx=0, fcReverse=false;
 function getBegrippen(){ return PARAGRAFEN[currentParId].begrippen; }
 
-function fcBuildDeck(keepCurrent){
+function fcBuildDeck(keepCurrent=false){
   const begrippen = getBegrippen();
   const ps = getParState(currentParId);
-  const only = document.getElementById("fcOnlyUnknown").checked;
+  const onlyUnknown = document.getElementById("fcOnlyUnknown").checked;
   const cur = fcDeck[fcIdx];
-  let base = begrippen.map((_,i)=>i);
-  if(fcDeck._order && fcDeck._order.length === begrippen.length) base = fcDeck._order.slice();
-  const order = base;
-  fcDeck = only ? order.filter(i=>!ps.fc.known[begrippen[i][0]]) : order.slice();
-  fcDeck._order = order;
+  let deck = begrippen.map((_,i)=>i);
+  if(onlyUnknown){
+    deck = deck.filter(i => !ps.fc.known[begrippen[i][0]]);
+  }
+  if(fcDeck._order){
+    deck.sort((a,b)=>fcDeck._order.indexOf(a) - fcDeck._order.indexOf(b));
+  }
+  fcDeck = deck;
   if(keepCurrent && fcDeck.includes(cur)) fcIdx = fcDeck.indexOf(cur);
   else if(fcIdx>=fcDeck.length) fcIdx=0;
   fcRender();
@@ -738,12 +791,20 @@ function fcRender(){
     const [b,d]=begrippen[fcDeck[fcIdx]];
     setTimeout(()=>{ front.textContent = fcReverse? d : b; back.textContent = fcReverse? b : d; }, 120);
     document.querySelector(".face.front").style.fontSize = fcReverse? "1.15rem":"1.7rem";
-    document.querySelector(".face.back").style.fontSize = fcReverse? "1.6rem":"1.15rem";
-    if(ps.fc.known[b]){ const t=document.createElement("span"); t.className="known-tag"; t.textContent="Gekend"; flash.querySelector(".front").appendChild(t); }
+    if(ps.fc.known[b]){
+      const tag=document.createElement("div"); tag.className="known-tag"; tag.textContent="GEKEND";
+      flash.appendChild(tag);
+    }
   }
-  const curTerm = fcDeck.length? begrippen[fcDeck[fcIdx]][0] : null;
-  document.getElementById("fcList").innerHTML = begrippen.map(([b],i)=>
-    `<span class="${ps.fc.known[b]?'k':''} ${b===curTerm?'cur':''}" onclick="fcJump(${i})">${esc(b)}</span>`).join("");
+  const curTerm = fcDeck.length ? begrippen[fcDeck[fcIdx]][0] : null;
+  const fcList = document.getElementById("fcList");
+  if(fcList){
+    fcList.innerHTML = begrippen.map(([b],i)=>{
+      const k = !!ps.fc.known[b];
+      const isCur = b === curTerm;
+      return `<span class="${k?'k':''} ${isCur?'cur':''}" onclick="fcJump(${i})">${esc(b)}</span>`;
+    }).join("");
+  }
 }
 
 function fcFlip(){ document.getElementById("flash").classList.toggle("flipped"); }
@@ -770,7 +831,7 @@ function fcShuffle(){
 }
 function fcToggleMode(){
   fcReverse=!fcReverse;
-  document.getElementById("fcModeBtn").textContent = fcReverse? "Toon: betekenis &rarr; begrip" : "Toon: begrip &rarr; betekenis";
+  document.getElementById("fcModeBtn").textContent = fcReverse? "Toon: betekenis \u2192 begrip" : "Toon: begrip \u2192 betekenis";
   fcRender();
 }
 function fcReset(){
@@ -867,7 +928,7 @@ function parseQuestion(text){
   const out=[]; let pwI=0; const re=/\{([^}]+)\}|([^\s{}]+)/g; let m;
   while((m=re.exec(text))){
     if(m[1]) out.push({t:m[1], pw:pwI++, click:true});
-    else { const t=m[2]; out.push({t, pw:-1, click:/[A-Za-zÀ-ÿ0-9]/.test(t)}); }
+    else { const t=m[2]; out.push({t, pw:-1, click:/[a-zA-Z0-9\u00C0-\u00FF]/.test(t)}); }
   }
   return out;
 }
@@ -910,8 +971,15 @@ function renderQ(){
   const step2Open = st.pwOk || st.tries>=2;
 
   const explHtml = labels.map((l,i)=>`
-    <label class="pw-label"><span class="pill">${i+1}</span>Leg uit: <u>${esc(l)}</u> <span class="muted" style="font-weight:400;font-size:.88rem">- ${esc(q.pw[i].hint)}</span></label>
-    <textarea data-e="${i}" placeholder="Schrijf een volledige zin over '${esc(l)}'..." oninput="qInput()">${esc(st.expl[i]||"")}</textarea>`).join("");
+    <label class="pw-label"><span class="pill">2a.${i+1}</span>Begrip uitleggen: <u>${esc(l)}</u> <span class="muted" style="font-weight:400;font-size:.88rem">- ${esc(q.pw[i].hint)}</span></label>
+    <textarea data-e="${i}" placeholder="Leg uit wat '${esc(l)}' betekent en wat belangrijk is..." oninput="qInput()">${esc(st.expl[i]||"")}</textarea>`).join("");
+
+  const schakelHtml = q.schakel ? `
+    <div style="margin-top:16px;padding-top:14px;border-top:1.5px dashed #d5cfc4">
+      <label class="pw-label"><span class="pill" style="background:#e8f4fd;color:#0b4f6c">2b</span>Ontbrekende schakel: <b>${esc(q.schakel.title || "Verbind de situatie met de vraag")}</b></label>
+      <p class="muted" style="margin:2px 0 8px;font-size:0.9rem">${esc(q.schakel.prompt)}</p>
+      <textarea id="schakelIn" placeholder="Schrijf hier de ontbrekende schakel / situatie in India..." oninput="qInput()">${esc(st.schakel||"")}</textarea>
+    </div>` : "";
 
   document.getElementById("qContainer").innerHTML = `
     <div class="q-head"><span class="pill">Vraag ${curQ+1} van ${vragen.length}</span>${st.done?'<span class="pill" style="background:var(--ok-l);color:var(--ok)">Klaar</span>':''}</div>
@@ -923,9 +991,10 @@ function renderQ(){
     </div>
     ${step2Open ? `
     <div class="step">
-      <h4>Stap 2 - Leg elk puntwoord uit</h4>
-      <p class="muted" style="margin:0">Wat betekent het begrip, en wat weet je erover in deze situatie (India)?</p>
+      <h4>Stap 2 - De inhoud uitwerken</h4>
+      <p class="muted" style="margin:0 0 10px"><b>2a.</b> Leg elk begrip uit &nbsp;|&nbsp; <b>2b.</b> Bedenk welke schakel of situatie nog ontbreekt om tot de conclusie te komen.</p>
       ${explHtml}
+      ${schakelHtml}
     </div>
     <div class="step">
       <h4>Stap 3 - Concluderend antwoord</h4>
@@ -968,6 +1037,8 @@ function qInput(){
   const vragen = getVragen();
   const st=qState(vragen[curQ].id);
   document.querySelectorAll("#qContainer textarea[data-e]").forEach(t=>st.expl[+t.dataset.e]=t.value);
+  const sIn=document.getElementById("schakelIn");
+  if(sIn) st.schakel=sIn.value;
   const cIn=document.getElementById("conclIn");
   if(cIn) st.concl=cIn.value;
   persist();
@@ -983,16 +1054,23 @@ function qCheckAnswer(){
   const errors=[], tips=[], goods=[];
   labels.forEach((l,i)=>{
     const t=(st.expl[i]||"").trim(), low=t.toLowerCase();
-    if(wordCount(t)<5) errors.push(`Uitleg bij <b>${esc(l)}</b> is te kort. Schrijf een volledige zin.`);
-    else if(startsWithOmdat(t)) errors.push(`Uitleg bij <b>${esc(l)}</b> begint met "Omdat". Begin je zin anders.`);
-    else if(q.pw[i].kw.some(k=>low.includes(k))) goods.push(`Uitleg bij <b>${esc(l)}</b> goed beantwoord.`);
-    else tips.push(`Uitleg bij <b>${esc(l)}</b>: ${esc(q.pw[i].hint)} Gebruik de betekenis van het begrip.`);
+    if(wordCount(t)<5) errors.push(`Uitleg bij begrip <b>${esc(l)}</b> (stap 2a) is te kort. Schrijf een volledige zin.`);
+    else if(startsWithOmdat(t)) errors.push(`Uitleg bij begrip <b>${esc(l)}</b> (stap 2a) begint met "Omdat". Begin je zin anders.`);
+    else if(q.pw[i].kw.some(k=>low.includes(k))) goods.push(`Begrip <b>${esc(l)}</b> (stap 2a) goed uitgelegd.`);
+    else tips.push(`Uitleg bij begrip <b>${esc(l)}</b>: ${esc(q.pw[i].hint)} Gebruik de betekenis van het begrip.`);
   });
+  if(q.schakel){
+    const s=(st.schakel||"").trim(), sl=s.toLowerCase();
+    if(wordCount(s)<5) errors.push(`De ontbrekende schakel (stap 2b: <b>${esc(q.schakel.title)}</b>) is te kort. Schrijf een volledige zin.`);
+    else if(startsWithOmdat(s)) errors.push(`De ontbrekende schakel (stap 2b) begint met "Omdat". Begin je zin anders.`);
+    else if(q.schakel.kw && q.schakel.kw.some(k=>sl.includes(k))) goods.push(`Ontbrekende schakel (stap 2b) goed gekoppeld.`);
+    else tips.push(`Ontbrekende schakel (stap 2b): let op dat je goed antwoord geeft op de vraag (${esc(q.schakel.prompt)}).`);
+  }
   const c=(st.concl||"").trim(), cl=c.toLowerCase();
-  if(wordCount(c)<5) errors.push("Je concluderende antwoord is te kort.");
-  else if(startsWithOmdat(c)) errors.push('Je conclusie begint met <b>"Omdat"</b>. Dat mag niet! Begin bijvoorbeeld met "Daarom...".');
-  else if(!q.concl.some(w=>cl.includes(w))) tips.push('Je conclusie bevat geen conclusiewoord. Gebruik <b>daarom</b>, <b>dus</b> of <b>hierdoor</b>.');
-  else goods.push("Concluderend antwoord opgebouwd.");
+  if(wordCount(c)<5) errors.push("Je concluderende antwoord (stap 3) is te kort.");
+  else if(startsWithOmdat(c)) errors.push('Je conclusie (stap 3) begint met <b>"Omdat"</b>. Dat mag niet! Begin bijvoorbeeld met "Daarom...".');
+  else if(!q.concl.some(w=>cl.includes(w))) tips.push('Je conclusie (stap 3) bevat geen conclusiewoord. Gebruik <b>daarom</b>, <b>dus</b> of <b>hierdoor</b>.');
+  else goods.push("Concluderend antwoord (stap 3) netjes opgebouwd.");
 
   const fb=document.getElementById("ansFb");
   if(errors.length){
@@ -1010,7 +1088,12 @@ function qCheckAnswer(){
 function showModel(){
   const vragen = getVragen();
   const q=vragen[curQ], st=qState(q.id);
-  const checks=["Ik heb alle puntwoorden uitgelegd.","Mijn uitleg gaat over India (de situatie in de vraag).","Mijn conclusie geeft echt antwoord op de vraag."];
+  const checks=[
+    "Ik heb alle begrippen duidelijk uitgelegd (stap 2a).",
+    "Ik heb nagedacht over de ontbrekende schakel / situatie in India (stap 2b).",
+    "Mijn conclusie geeft echt antwoord op de vraag (stap 3, met daarom / dus / hierdoor).",
+    "Geen van mijn zinnen begint met 'Omdat'."
+  ];
   document.getElementById("modelBox").innerHTML = `
     <div class="step">
       <h4>Vergelijk met het modelantwoord</h4>
@@ -1029,7 +1112,7 @@ function qSelf(i,v){ qState(getVragen()[curQ].id).self[i]=v; persist(); }
 function qDone(){
   const q = getVragen()[curQ];
   const st=qState(q.id);
-  if(!st.self.every(Boolean)){ toast("Vink eerst de drie controlepunten aan (pas je antwoord aan als dat nodig is)."); return; }
+  if(!st.self.every(Boolean)){ toast("Vink eerst de vier controlepunten aan (pas je antwoord aan als dat nodig is)."); return; }
   st.done=true; persist(); toast("Vraag afgerond!");
   if(curQ < getVragen().length - 1){ curQ++; } renderQ();
 }
@@ -1044,28 +1127,44 @@ function statsPar(pid){
   const hlDone = par.teksten.filter(t=>ps.hl[t.id] && ps.hl[t.id].checked).length;
   let hlGoed=0, hlTot=0;
   par.teksten.forEach(t=>{
-    const st = ps.hl[t.id] || {sel:[], checked:false};
     const chunks = getChunks(t);
-    chunks.forEach(c=>{
-      if(c.k){
-        hlTot++;
-        if(st.checked && st.sel.includes(c.id)) hlGoed++;
-      }
-    });
+    const kTot = chunks.filter(c=>c.k).length;
+    hlTot += kTot;
+    if(ps.hl[t.id] && ps.hl[t.id].checked){
+      const sel = ps.hl[t.id].sel || [];
+      hlGoed += chunks.filter(c=>c.k && sel.includes(c.id)).length;
+    }
   });
   const qDoneN = par.vragen.filter(q=>ps.q[q.id] && ps.q[q.id].done).length;
-  return { known, begrippenTot: par.begrippen.length, hlDone, tekstenTot: par.teksten.length, hlGoed, hlTot, qDoneN, vragenTot: par.vragen.length };
+  return {
+    known, begrippenTot: par.begrippen.length,
+    hlDone, tekstenTot: par.teksten.length,
+    hlGoed, hlTot,
+    qDoneN, vragenTot: par.vragen.length
+  };
 }
 
 function renderProgress(){
-  const pids = Object.keys(PARAGRAFEN);
   let h = "";
-  const row=(label,n,tot)=>`<p style="margin:12px 0 4px"><b>${label}</b> <span class="muted">${n} / ${tot}</span></p><div class="progressbar"><span style="width:${tot?n/tot*100:0}%"></span></div>`;
+  const pids = Object.keys(PARAGRAFEN).sort();
   
   pids.forEach(pid=>{
     const par = PARAGRAFEN[pid];
     const s = statsPar(pid);
     const isActive = pid === currentParId;
+    
+    const row = (lbl, val, tot) => {
+      const pct = tot ? Math.round(val/tot*100) : 0;
+      return `
+        <div style="margin-top:10px">
+          <div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-bottom:3px">
+            <span>${lbl}</span><b>${val} / ${tot} (${pct}%)</b>
+          </div>
+          <div class="progressbar"><span style="width:${pct}%"></span></div>
+        </div>
+      `;
+    };
+
     h += `
       <div style="margin-bottom:24px;border:1.5px solid ${isActive?'var(--primary)':'#e2dbd0'};border-radius:12px;padding:16px;background:${isActive?'#fcfdfd':'#fff'}">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
@@ -1109,7 +1208,7 @@ function loadJSON(ev){
   r.onload=()=>{
     try{
       const d=JSON.parse(r.result);
-      if(d.app!=="geo-india-vwo-h5" && d.app!=="geo-india-h5" && d.app!=="geo-india-5-1") throw new Error("Dit is geen voortgangsbestand van deze opdracht.");
+      if(d.app!=="geo-india-vwo-h5" && d.app!=="geo-india-h5" && d.app!=="geo-india-vwo-h5" && d.app!=="geo-india-5-1") throw new Error("Dit is geen voortgangsbestand van deze opdracht.");
       
       if(d.app === "geo-india-5-1"){
         state = freshState();
@@ -1125,7 +1224,7 @@ function loadJSON(ev){
   };
   r.readAsText(f);
 }
-function qInputSafe(){ if(document.getElementById("conclIn")) qInput(); }
+function qInputSafe(){ if(document.getElementById("conclIn") || document.getElementById("schakelIn")) qInput(); }
 
 /* =========================================================
    PDF EXPORT (PER PARAGRAAF)
@@ -1187,7 +1286,7 @@ function downloadPDF(){
 
   txt("Leg-uit-vragen",{size:14,bold:true,color:[11,79,108],gap:3});
   par.vragen.forEach((q,qi)=>{
-    const st=ps.q[q.id] || {sel:[], done:false, expl:[], concl:"", passed:false};
+    const st=ps.q[q.id] || {sel:[], done:false, expl:[], schakel:"", concl:"", passed:false};
     const labels=pwLabels(q);
     need(30);
     txt(`Vraag ${qi+1}${st.done?" (afgerond)":""}`,{size:11.5,bold:true,color:[194,24,91],gap:1});
@@ -1195,9 +1294,13 @@ function downloadPDF(){
     const chunks=parseQuestion(q.text);
     const chosen=st.sel.map(i=>chunks[i]&&chunks[i].t).filter(Boolean);
     txt("Gekozen puntwoorden: "+(chosen.length?chosen.join(", "):"-")+(st.pwOk?"  (goed)":st.tries>=2?"  (na hulp)":""),{size:10,color:[90,90,90]});
-    txt("Uitleg puntwoorden:",{size:10.5,bold:true,gap:0.5});
+    txt("Stap 2a - Begrippen:",{size:10.5,bold:true,gap:0.5});
     labels.forEach((l,i)=>txt(`- ${l}: ${(st.expl[i]||"").trim()||"(niet ingevuld)"}`,{size:10.5,indent:3,gap:0.8}));
-    txt("Conclusie: "+((st.concl||"").trim()||"(niet ingevuld)"),{size:10.5,bold:false,gap:1.5});
+    if(q.schakel){
+      txt(`Stap 2b - Ontbrekende schakel (${q.schakel.title}):`,{size:10.5,bold:true,gap:0.5});
+      txt((st.schakel||"").trim()||"(niet ingevuld)",{size:10.5,indent:3,gap:0.8});
+    }
+    txt("Stap 3 - Conclusie: "+((st.concl||"").trim()||"(niet ingevuld)"),{size:10.5,bold:false,gap:1.5});
     if(st.passed) txt("Modelantwoord: "+stripHtml(q.model),{size:9.5,color:[110,110,110],gap:4});
     else y+=3;
   });
@@ -1226,7 +1329,6 @@ try{
 }catch(e){}
 
 renderAll();
-window.addEventListener("beforeunload", e=>{ qInputSafe(); persist(); });
-</script>
+window.addEventListener("beforeunload", e=>{ qInputSafe(); persist(); });</script>
 </body>
 </html>
