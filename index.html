@@ -1,0 +1,1232 @@
+﻿<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5 India VWO - Oefenen</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  :root{
+    --bg:#f3eee6; --card:#fff; --ink:#1f2a33; --muted:#6b7680;
+    --primary:#0b4f6c; --primary-l:#e3eff4; --accent:#c2185b;
+    --ok:#2e7d32; --ok-l:#e5f4e6; --bad:#c62828; --bad-l:#fde7e7;
+    --warn:#ef6c00; --warn-l:#fff1e0; --hl:#ffe76a; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  header{background:var(--primary);color:#fff;padding:18px 24px}
+  header .wrap{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+  header h1{margin:0;font-size:1.45rem}
+  header p{margin:2px 0 0;opacity:.85;font-size:.92rem}
+  .wrap{max-width:1050px;margin:0 auto}
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .toolbar input[type=text]{padding:8px 10px;border-radius:8px;border:none;min-width:200px;font-size:.95rem}
+  button{font:inherit;cursor:pointer;border:none;border-radius:9px;padding:8px 14px;background:var(--primary);color:#fff;transition:.15s}
+  button:hover{filter:brightness(1.12)}
+  button.sec{background:#fff;color:var(--primary);border:1.5px solid var(--primary)}
+  button.ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.7)}
+  button.accent{background:var(--accent)}
+  button.okb{background:var(--ok)}
+  button.badb{background:var(--bad)}
+  button:disabled{opacity:.45;cursor:not-allowed;filter:none}
+  
+  /* Paragraaf selector balk */
+  .par-bar{background:#083d53;border-bottom:1px solid rgba(255,255,255,0.15);padding:6px 0}
+  .par-bar .wrap{display:flex;gap:8px;align-items:center;overflow-x:auto;padding:0 12px}
+  .par-btn{background:rgba(255,255,255,0.12);color:#fff;border:none;padding:6px 14px;border-radius:20px;font-size:0.9rem;white-space:nowrap}
+  .par-btn:hover{background:rgba(255,255,255,0.25)}
+  .par-btn.active{background:#fff;color:var(--primary);font-weight:700}
+  .par-btn.disabled{opacity:0.4;cursor:not-allowed}
+
+  nav{background:#fff;border-bottom:1px solid #e2dbd0;position:sticky;top:0;z-index:10}
+  nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 12px}
+  nav button{background:transparent;color:var(--ink);border-radius:0;padding:14px 16px;border-bottom:3px solid transparent;white-space:nowrap}
+  nav button.active{border-bottom-color:var(--accent);color:var(--accent);font-weight:600}
+  main{padding:24px 16px 60px}
+  section.tab{display:none}
+  section.tab.active{display:block}
+  .card{background:var(--card);border-radius:var(--radius);padding:20px 22px;margin-bottom:18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  h2{margin-top:0;color:var(--primary)}
+  h3{margin:0 0 8px;color:var(--primary)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .pill{display:inline-block;background:var(--primary-l);color:var(--primary);padding:2px 10px;border-radius:99px;font-size:.82rem;font-weight:600}
+  .muted{color:var(--muted)}
+  .note{background:var(--warn-l);border-left:4px solid var(--warn);padding:10px 14px;border-radius:8px;font-size:.92rem}
+  .tip{background:var(--primary-l);border-left:4px solid var(--primary);padding:10px 14px;border-radius:8px;font-size:.93rem}
+  table{border-collapse:collapse;width:100%}
+  td,th{padding:8px 10px;border-bottom:1px solid #eee;vertical-align:top;text-align:left}
+  td:first-child{font-weight:600;white-space:nowrap}
+  ul.tight{margin:6px 0;padding-left:20px}
+  .schema{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .schema div{border:2px solid var(--primary-l);border-radius:12px;padding:12px}
+  .schema b{color:var(--accent)}
+  .progressbar{height:10px;background:#e8e2d8;border-radius:99px;overflow:hidden}
+  .progressbar span{display:block;height:100%;background:var(--ok);transition:.3s}
+
+  /* Flashcards */
+  .fc-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .flash{perspective:1200px;height:260px;max-width:620px;margin:0 auto 16px;cursor:pointer}
+  .flash-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+  .flash.flipped .flash-inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:26px;text-align:center;box-shadow:0 6px 18px rgba(0,0,0,.1)}
+  .face.front{background:var(--primary);color:#fff;font-size:1.7rem;font-weight:700}
+  .face.back{background:#fff;transform:rotateY(180deg);font-size:1.15rem;border:3px solid var(--primary)}
+  .face small{position:absolute;bottom:12px;font-size:.78rem;opacity:.7;font-weight:400}
+  .fc-btns{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .known-tag{position:absolute;top:12px;right:14px;font-size:.8rem;background:var(--ok);color:#fff;padding:2px 9px;border-radius:99px;font-weight:600}
+  .fc-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+  .fc-list span{font-size:.8rem;padding:3px 9px;border-radius:99px;background:#eee;cursor:pointer}
+  .fc-list span.k{background:var(--ok-l);color:var(--ok)}
+  .fc-list span.cur{outline:2px solid var(--accent)}
+
+  /* Highlight */
+  .hl-text{font-size:1.06rem;line-height:1.9}
+  .sent{cursor:pointer;padding:2px 1px;border-radius:4px;transition:background .15s}
+  .sent:hover{background:#fff6c2}
+  .sent.sel{background:var(--hl)}
+  .sent.r-ok{background:#b9e6bb}
+  .sent.r-miss{background:transparent;border-bottom:3px dashed var(--warn)}
+  .sent.r-wrong{background:#f7c1c1;text-decoration:line-through;text-decoration-color:rgba(198,40,40,.5)}
+  .locked .sent{cursor:default}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;margin-top:10px}
+  .legend i{display:inline-block;width:18px;height:12px;border-radius:3px;vertical-align:middle;margin-right:5px}
+  .feedback{margin-top:12px;padding:10px 14px;border-radius:10px;font-size:.95rem}
+  .feedback.ok{background:var(--ok-l);color:#1b5e20}
+  .feedback.bad{background:var(--bad-l);color:#8e1c1c}
+  .feedback.warn{background:var(--warn-l);color:#8a4200}
+  .why{font-size:.9rem;margin:6px 0 0;padding-left:18px}
+
+  /* Questions */
+  .q-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .q-text{font-size:1.15rem;font-weight:600;margin:10px 0;line-height:2.1}
+  .w{cursor:pointer;padding:3px 4px;border-radius:6px;border:1.5px solid transparent}
+  .w:hover{border-color:#bbb}
+  .w.sel{background:var(--hl);border-color:#e0c200}
+  .w.good{background:#b9e6bb;border-color:var(--ok)}
+  .w.wrong{background:#f7c1c1;border-color:var(--bad)}
+  .w.missed{border:2px dashed var(--warn)}
+  .locked .w{cursor:default}
+  .step{border-top:1px dashed #ddd;padding-top:14px;margin-top:14px}
+  .step.disabled{opacity:.4;pointer-events:none}
+  .step h4{margin:0 0 6px;color:var(--accent)}
+  textarea{width:100%;min-height:70px;font:inherit;padding:10px;border-radius:9px;border:1.5px solid #cfc8bd;resize:vertical}
+  textarea:focus{outline:none;border-color:var(--primary)}
+  .pw-label{font-weight:600;margin:10px 0 4px;display:block}
+  .pw-label .pill{margin-right:6px}
+  .model{background:#f7f5f0;border-radius:10px;padding:12px 14px;margin-top:10px}
+  .model .pw{background:var(--hl);padding:0 3px;border-radius:3px}
+  .qnav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+  .qnav button{background:#fff;color:var(--ink);border:1.5px solid #cfc8bd;min-width:42px}
+  .qnav button.done{background:var(--ok);color:#fff;border-color:var(--ok)}
+  .qnav button.cur{outline:3px solid var(--accent)}
+  .check-list label{display:block;margin:4px 0}
+  .example{background:#fff;border:2px dashed var(--primary-l);border-radius:12px;padding:12px 16px}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;opacity:0;transition:.3s;z-index:99;pointer-events:none}
+  .toast.show{opacity:1}
+  @media print{nav,.par-bar,header .toolbar,.noprint{display:none!important} section.tab{display:block!important} body{background:#fff}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div>
+      <h1 id="headerTitle">5.1 India: land vol verschillen</h1>
+      <p id="headerSubtitle">De Geo - 3 vwo - H5 India</p>
+    </div>
+    <div class="toolbar">
+      <input type="text" id="studentName" placeholder="Jouw naam en klas">
+      <button class="ghost" onclick="saveJSON()" title="Download alle voortgang als bestand">Voortgang opslaan</button>
+      <button class="ghost" onclick="document.getElementById('fileIn').click()" title="Laad een eerder opgeslagen bestand">Voortgang laden</button>
+      <input type="file" id="fileIn" accept=".json,application/json" hidden onchange="loadJSON(event)">
+      <button class="accent" id="pdfBtn" onclick="downloadPDF()">Download PDF (par. 5.1)</button>
+    </div>
+  </div>
+</header>
+
+<div class="par-bar">
+  <div class="wrap" id="parTabs">
+    <button class="par-btn active" data-pid="5.1" onclick="switchPar('5.1')">5.1 India: land vol verschillen</button>
+    <button class="par-btn disabled" title="Binnenkort beschikbaar" onclick="toast('Paragraaf 5.2 wordt later toegevoegd.')">5.2 Het land van de moesson</button>
+    <button class="par-btn disabled" title="Binnenkort beschikbaar" onclick="toast('Paragraaf 5.3 wordt later toegevoegd.')">5.3 Booming India</button>
+  </div>
+</div>
+
+<nav>
+  <div class="wrap" id="tabs">
+    <button data-tab="overzicht" class="active">Overzicht</button>
+    <button data-tab="flashcards">Flashcards</button>
+    <button data-tab="markeren">Kern herkennen</button>
+    <button data-tab="leguit">Leg-uit-vragen</button>
+    <button data-tab="voortgang">Voortgang</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ============ OVERZICHT ============ -->
+<section class="tab active" id="overzicht">
+  <div id="overzichtContainer"></div>
+</section>
+
+<!-- ============ FLASHCARDS ============ -->
+<section class="tab" id="flashcards">
+  <div class="card">
+    <h2>Flashcards</h2>
+    <p class="muted" style="margin-top:-6px">Klik op de kaart (of druk op <b>spatie</b>) om hem om te draaien. Geef daarna aan of je het wist. Pijltjestoetsen &larr; &rarr; om te bladeren.</p>
+    <div class="fc-controls">
+      <div class="toolbar">
+        <button class="sec" onclick="fcShuffle()">Schudden</button>
+        <button class="sec" id="fcModeBtn" onclick="fcToggleMode()">Toon: begrip &rarr; betekenis</button>
+        <label style="font-size:.92rem"><input type="checkbox" id="fcOnlyUnknown" onchange="fcBuildDeck()"> Alleen nog-oefenen-kaarten</label>
+      </div>
+      <div><b id="fcCount"></b></div>
+    </div>
+    <div class="progressbar" style="max-width:620px;margin:0 auto 16px"><span id="fcBar"></span></div>
+    <div class="flash" id="flash" onclick="fcFlip()">
+      <div class="flash-inner">
+        <div class="face front"><span id="fcFront"></span><small>klik om om te draaien</small></div>
+        <div class="face back"><span id="fcBack"></span><small>Wist je het?</small></div>
+      </div>
+    </div>
+    <div class="fc-btns">
+      <button class="sec" onclick="fcMove(-1)">&larr; Vorige</button>
+      <button class="badb" onclick="fcMark(false)">Nog oefenen</button>
+      <button class="okb" onclick="fcMark(true)">Ik wist het</button>
+      <button class="sec" onclick="fcMove(1)">Volgende &rarr;</button>
+    </div>
+    <div class="fc-list" id="fcList"></div>
+    <p style="text-align:center;margin-top:14px"><button class="sec" onclick="fcReset()">Alles opnieuw oefenen</button></p>
+  </div>
+</section>
+
+<!-- ============ MARKEREN ============ -->
+<section class="tab" id="markeren">
+  <div class="card">
+    <h2>Kern herkennen</h2>
+    <p>Lees de tekst. <b>Klik op de zinnen</b> die de <b>kern</b> bevatten: de zinnen die je echt moet onthouden. Klik nog een keer om de markering weg te halen. Druk daarna op <b>Controleer</b>.</p>
+    <div class="tip">
+      <b>Hoe herken je een kernzin?</b>
+      <ul class="tight">
+        <li>Er staat een <b>begrip</b> in dat wordt uitgelegd of gebruikt.</li>
+        <li>Er staat een <b>oorzaak of gevolg</b> in (signaalwoorden: <i>daardoor, omdat, waardoor, dus</i>).</li>
+        <li>Een <b>voorbeeld</b>, een los weetje of een extra getal is meestal <b>bijzaak</b>.</li>
+      </ul>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--hl)"></i>jouw markering</span>
+      <span><i style="background:#b9e6bb"></i>goed gemarkeerd</span>
+      <span><i style="background:#f7c1c1"></i>bijzaak (niet nodig)</span>
+      <span><i style="border-bottom:3px dashed var(--warn);height:8px"></i>kernzin gemist</span>
+    </div>
+  </div>
+  <div id="hlContainer"></div>
+</section>
+
+<!-- ============ LEG UIT ============ -->
+<section class="tab" id="leguit">
+  <div class="card">
+    <h2>Leg-uit-vragen beantwoorden</h2>
+    <p>Bij een leg-uit-vraag werk je in <b>drie stappen</b>:</p>
+    <ol>
+      <li><b>Puntwoorden herkennen</b> - welke woorden in de vraag moet je uitleggen?</li>
+      <li><b>Puntwoorden uitleggen</b> - leg elk puntwoord uit en koppel het aan de situatie in India.</li>
+      <li><b>Concluderend antwoord</b> - trek een conclusie die antwoord geeft op de vraag (begin met <i>Daarom...</i>, <i>Dus...</i> of <i>Hierdoor...</i>).</li>
+    </ol>
+    <div class="note">Let op: een antwoord begint <b>nooit</b> met <b>"Omdat"</b>. Je schrijft volledige zinnen.</div>
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer;font-weight:600;color:var(--primary)">Bekijk een voorbeeld (biologie)</summary>
+      <div class="example" style="margin-top:10px">
+        <p><b>Vraag:</b> Leg uit waarom bij een <span class="pill">diepe wond</span> de kans op een <span class="pill">infectie</span> groter is dan bij een <span class="pill">schaafwond</span>.</p>
+        <p><b>Stap 1 - puntwoorden:</b> diepe wond, schaafwond, infectie.</p>
+        <p><b>Stap 2 - uitleg:</b> Bij een diepe wond kunnen bacteriën eerder bij een bloedvat komen. Een schaafwond is oppervlakkig. Een infectie wordt veroorzaakt door een overschot aan bacteriën.</p>
+        <p><b>Stap 3 - conclusie:</b> Daarom levert een diepe wond een grotere kans op een infectie.</p>
+      </div>
+    </details>
+  </div>
+  <div class="card">
+    <div class="qnav" id="qnav"></div>
+    <div id="qContainer"></div>
+  </div>
+</section>
+
+<!-- ============ VOORTGANG ============ -->
+<section class="tab" id="voortgang">
+  <div class="card">
+    <h2>Jouw voortgang</h2>
+    <div id="progressOverview"></div>
+  </div>
+  <div class="card">
+    <h3>Opslaan, laden en inleveren</h3>
+    <p><b>Voortgang opslaan</b> downloadt een <code>.json</code>-bestand met al je antwoorden voor <b>alle paragrafen</b> van hoofdstuk 5 (VWO). Bewaar dit bestand goed (bijvoorbeeld in OneDrive).<br>
+    <b>Voortgang laden</b>: kies dat bestand later weer en je gaat verder waar je gebleven was.<br>
+    <b>Download PDF</b>: maakt een PDF-verslag van de actieve paragraaf om in te leveren als je klaar bent.</p>
+    <div class="toolbar">
+      <button onclick="saveJSON()">Voortgang opslaan</button>
+      <button class="sec" onclick="document.getElementById('fileIn').click()">Voortgang laden</button>
+      <button class="accent" onclick="downloadPDF()">Download PDF</button>
+    </div>
+    <p class="muted" style="font-size:.85rem;margin-bottom:0">Je werk wordt ook tijdelijk in deze browser bewaard, maar sla het altijd op als bestand: op een andere computer is het anders weg.</p>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>const PARAGRAFEN = {
+  "5.1": {
+    titel: "5.1 India: land vol verschillen",
+    subtitel: "De Geo - 3 vwo - H5 India",
+    jeLeert: "Welke sociale, culturele en demografische verschillen zijn er in India?",
+    inleiding: "India ligt in het cultuurgebied <b>Zuid-Azië</b> en is een land van contrasten.",
+    leerdoelen: [
+      "waarom India een federatie is geworden",
+      "culturele verschillen in India: taal en godsdienst",
+      "waarom India een lingua franca heeft",
+      "gevolgen van het kastenstelsel verklaren (inclusief hiërarchie, subkasten en dalits)",
+      "veranderingen in de bevolking verklaren (geboortecijfer, vruchtbaarheidscijfer, groene en demografische druk)",
+      "bevolkingsdiagrammen interpreteren (piramide, granaat, urn)",
+      "gevolgen van globalisering benoemen (fysisch, sociaal-cultureel, economisch, politiek)"
+    ],
+    theorieBlokken: [
+      {
+        titel: "Cultureel mozaïek & koloniaal verleden",
+        punten: [
+          "<i>Dé Indiër bestaat niet.</i> Nergens ter wereld is er zo'n grote variatie aan <b>talen, godsdiensten en gewoonten</b>.",
+          "India kun je het best vergelijken met een werelddeel als Europa: tussen Tamils (Zuid), Bengalen (Oost) en Punjabi (Noordwest) bestaan minstens even grote culturele verschillen als tussen Spanjaarden, Engelsen en Roemenen.",
+          "De groepen wonen niet in aparte landen, maar in <b>deelstaten</b>.",
+          "De Britten brachten honderden vorstendommen onder één bestuur. De <b>kolonie</b> Brits-Indië leverde katoen, jute en thee aan <b>moederland</b> Engeland.",
+          "Bij de onafhankelijkheid in <b>1947</b> werd India een <b>federatie</b> met deelstaten: een slimme manier om rekening te houden met het culturele mozaïek van volken en talen."
+        ]
+      },
+      {
+        titel: "Talen en lingua franca",
+        punten: [
+          "Van de honderden talen zijn er <b>27 officieel erkend</b>.",
+          "<b>Hindi</b> is de belangrijkste taal: twee derde van de Indiërs spreekt het, maar meestal is het niet hun moedertaal.",
+          "Vooral in het zuiden vinden veel Indiërs dat hun taal is achtergesteld bij het Hindi.",
+          "<b>Engels</b> is de neutrale <b>lingua franca</b>: het overbrugt de taalverschillen zodat mensen met verschillende moedertalen elkaar kunnen verstaan."
+        ]
+      },
+      {
+        titel: "Hindoeïsme & het kastenstelsel (VWO)",
+        punten: [
+          "Meeste inwoners zijn hindoe (81%), met belangrijke minderheden van moslims (13%), christenen, sikhs en boeddhisten.",
+          "Hindoes geloven in meerdere goden en in <b>wedergeboorte (reïncarnatie)</b>.",
+          "Het <b>kastenstelsel</b> deelt de bevolking in sociale groepen in op basis van geboorte: je kunt tijdens je leven niet van kaste veranderen. Het bepaalt je beroep, huwelijk en leefregels.",
+          "Er is een duidelijke hiërarchie van vier hoofdkasten: <b>brahmanen</b> (hoogste kaste), kshatriya's, vaishya's en shudra's (laagste kaste).",
+          "Elke hoofdkaste is weer onderverdeeld in vele subkasten: de <b>jati</b>.",
+          "Onder aan de ladder staan ruim 200 miljoen <b>dalits</b> ('onaanraakbaren' of kastelozen). Zij doen het vuilste werk en wonen in aparte wijken.",
+          "In <b>1950</b> officieel afgeschaft, maar door diepgewortelde tradities werkt het kastenstelsel nog altijd sterk door."
+        ]
+      },
+      {
+        titel: "Grote bevolking & demografische trends",
+        punten: [
+          "Ruim <b>1,4 miljard inwoners</b>; de helft is jonger dan 25 jaar, wat zorgt voor een hoge <b>groene druk</b>.",
+          "Het <b>vruchtbaarheidscijfer</b> daalt (gemiddeld 2,2 kinderen per vrouw), maar de bevolking groeit voorlopig nog door.",
+          "Redenen voor relatief veel kinderen: jonge huwelijksleeftijd van vrouwen, gebrekkige toegang tot anticonceptie, kinderen die financieel meehelpen en voor oude ouders zorgen.",
+          "In de steden daalt het geboortecijfer sneller dan op het platteland: minder vasthouden aan tradities en hoger opgeleide vrouwen die later trouwen."
+        ]
+      },
+      {
+        titel: "Basisboek: Demografische druk",
+        punten: [
+          "Bevolking wordt verdeeld in: jongeren (0-20), productieven (20-65) en ouderen (65+).",
+          "<b>Demografische druk</b>: verhouding tussen de productieve groep en de niet-productieve groepen.",
+          "<b>Groene druk</b>: druk van de groep van 0 tot 20 jaar op de werkenden (20-65).",
+          "<b>Grijze druk</b>: druk van de 65-plussers op de werkenden (20-65)."
+        ]
+      },
+      {
+        titel: "Basisboek: Bevolkingsdiagrammen",
+        punten: [
+          "<b>Piramide</b> (bv. Gambia): brede basis, hoog geboortecijfer, snelle bevolkingsgroei (ontwikkelingslanden).",
+          "<b>Granaat</b> (bv. Indonesië): ongeveer even brede staven onder en midden, lage geboortecijfers, langzame bevolkingsgroei.",
+          "<b>Urn</b> (bv. Duitsland): smalle basis, krimpende jongste groepen, dalende bevolking of sterfteoverschot (rijke landen)."
+        ]
+      },
+      {
+        titel: "Basisboek: Gevolgen van globalisering",
+        punten: [
+          "<b>Fysisch</b>: toenemende vervuiling van lucht, water en bodem in opkomende industrielanden.",
+          "<b>Sociaal-cultureel</b>: vervaging van de eigen cultuur door instroom van buitenlandse invloeden.",
+          "<b>Economisch</b>: groeiende <b>regionale ongelijkheid</b> (tussen platteland en 'global cities') en <b>sociale ongelijkheid</b> (rijke elite versus arme massa).",
+          "<b>Politiek</b>: sommige landen sluiten zich angstvallig af (zoals Noord-Korea), wat leidt tot ernstige inperking van vrijheden."
+        ]
+      }
+    ],
+    schema: [
+      { titel:"Verleden", tekst:"Britse exploitatiekolonie &rarr; Engels als lingua franca, spoorwegen, bestuur & grenzen." },
+      { titel:"Cultuur", tekst:"Cultureel mozaïek met honderden talen & religies &rarr; federatie met 28 deelstaten." },
+      { titel:"Samenleving", tekst:"Hindoeïsme &rarr; kastenstelsel (brahmanen tot dalits, jati) &rarr; grote sociale ongelijkheid." },
+      { titel:"Bevolking", tekst:"Ruim 1,4 miljard &rarr; hoge groene druk; steden dalen sneller door onderwijs en modernisering." },
+      { titel:"Globalisering", tekst:"Groei van steden en industrie &rarr; toename van zowel regionale als sociale ongelijkheid." }
+    ],
+    begrippen: [
+      ["bevolkingsdiagram","Staafdiagram met de leeftijdsopbouw van de bevolking."],
+      ["bondsstaat","Zie federatie."],
+      ["deelstaat","Gebied binnen een land dat voor een deel zelfbestuur (autonomie) heeft. Er is een hoofdstad, er zijn ministeries en er zijn eigen wetten en regels."],
+      ["demografische druk","De verhouding tussen de productieve en de niet-productieve leeftijdsgroep."],
+      ["exploitatiekolonie","Kolonie die (meestal) Europeanen gebruikten om er zelf voordeel van te hebben."],
+      ["federatie","Een land met één centrale regering met daarnaast in elke deelstaat een eigen regering. Heet ook bondsstaat."],
+      ["geboortecijfer","Het gemiddelde aantal levendgeborenen per duizend inwoners per jaar."],
+      ["groene druk","De verhouding tussen de groep van 0- tot 20-jarigen en het aantal 20- tot 65-jarigen."],
+      ["hindoeïsme","Godsdienst waarbij men gelooft in meerdere goden en een leven na de dood."],
+      ["kastenstelsel","Indeling van de Indiase samenleving in verschillende sociale groepen (kasten)."],
+      ["kolonie","Gebied in een ander werelddeel dat in het bezit is van (meestal) een Europees land."],
+      ["leeftijdsopbouw","De samenstelling van een bevolking in verschillende leeftijdsgroepen."],
+      ["lingua franca","Taal die op grote schaal als voertaal wordt gebruikt door mensen met verschillende moedertalen."],
+      ["moederland","Staat die gezag uitoefent over een kolonie."],
+      ["politiek systeem","Manier waarop een staat wordt bestuurd."],
+      ["sociale ongelijkheid","Verschillen in welvaart en ontwikkelingskansen tussen groepen mensen in een gebied."],
+      ["vestigingskolonie","Kolonie waar de (meestal) Europeanen zich blijvend vestigen."]
+    ],
+    teksten: [
+      { id:"t1", titel:"Tekst 1 - Ligging en bestuur", zinnen:[
+        {parts:[{t:"Zuid-Azië is een groot subcontinent.", k:false}]},
+        {parts:[{t:"Dat er toch maar zes staten liggen, is een erfenis van de Britten.", k:false}]},
+        {parts:[{t:"Ze koloniseerden het gebied en brachten honderden vorstendommen onder één bestuur.", k:false}]},
+        {parts:[{t:"De kolonie Brits Indië leverde katoen, jute en thee aan moederland Engeland.", k:true, why:"Verklaart de functie als exploitatiekolonie en de relatie met moederland Engeland."}]},
+        {parts:[{t:"Bij de onafhankelijkheid in 1947 werd India een federatie en kreeg het land een indeling in deelstaten.", k:true, why:"Kern van het bestuur: invoering van een federatie met deelstaten bij onafhankelijkheid."}]},
+        {parts:[{t:"Dat was een slimme manier om rekening te houden met het culturele mozaïek van volken en talen.", k:true, why:"Verklaart waarom India koos voor een federatieve staatsvorm."}]}
+      ]},
+      { id:"t2", titel:"Tekst 2 - Cultureel mozaïek en talen", zinnen:[
+        {parts:[{t:"Dé Indiër bestaat niet.", k:true, why:"Kernstelling: er bestaat geen typische Indiër vanwege de immense diversiteit."}]},
+        {parts:[{t:"Er is geen land in de wereld waar zo’n grote variatie aan talen, godsdiensten en gewoonten is.", k:true, why:"Onderbouwing van de kernstelling over het ontbreken van dé Indiër."}]},
+        {parts:[{t:"Je kunt India het beste vergelijken met een werelddeel als Europa.", k:false}]},
+        {parts:[{t:"Tussen Tamils uit Zuid-India, Bengalen uit Oost-India of Punjabi uit Noordwest-India bestaan minstens even grote culturele verschillen als tussen Spanjaarden, Engelsen en Roemenen.", k:false}]},
+        {parts:[{t:"Alleen wonen de verschillende groepen Indiërs niet in aparte landen, maar in deelstaten.", k:false}]},
+        {parts:[{t:"Van de honderden talen in India zijn er nu 27 officieel erkend, met het Hindi als belangrijkste taal (figuur 3).", k:false}]},
+        {parts:[{t:"Twee derde van de Indiërs spreekt die taal, al is het meestal niet hun moedertaal.", k:false}]},
+        {parts:[{t:"Vooral in het zuiden vinden veel Indiërs dat hun taal is achtergesteld bij het Hindi.", k:false}]},
+        {parts:[{t:"Het Engels overbrugt de taalverschillen in India.", k:false}]},
+        {parts:[{t:"Het is er de lingua franca.", k:true, why:"Kernbegrip: Engels fungeert als neutrale lingua franca om de taalverschillen te overbruggen."}]}
+      ]},
+      { id:"t3", titel:"Tekst 3 - Godsdienst en het kastenstelsel", zinnen:[
+        {parts:[{t:"De meeste mensen in India zijn hindoe, maar er wonen ook moslims, christenen, sikhs en boeddhisten (figuur 4).", k:false}]},
+        {parts:[{t:"Hindoes (figuur 7) geloven in meerdere goden en in wedergeboorte.", k:false}]},
+        {parts:[{t:"Wedergeboorte betekent dat je na je dood opnieuw geboren wordt als mens of als dier.", k:false}]},
+        {parts:[{t:"Volgens het hindoeïsme is de bevolking ingedeeld in verschillende groepen (kasten).", k:true, why:"Verbindt de religie hindoeïsme direct met de maatschappelijke kastenindeling."}]},
+        {parts:[{t:"Vanaf je geboorte hoor je bij een bepaalde kaste en je kunt tijdens je leven niet van kaste veranderen.", k:true, why:"Belangrijk kenmerk: de kaste ligt levenslang vast op basis van afkomst."}]},
+        {parts:[{t:"Die afkomst bepaalt welk beroep je moet kiezen.", k:false}]},
+        {parts:[{t:"Ook moet je trouwen met iemand uit je eigen kaste en moet je je houden aan de leefregels van je kaste.", k:false}]},
+        {parts:[{t:"Dit kastenstelsel zorgt voor grote sociale ongelijkheid.", k:true, why:"Groot maatschappelijk gevolg van het kastenstelsel in India."}]}
+      ]},
+      { id:"t4", titel:"Tekst 4 - VWO: Hiërarchie, subkasten (jati) en dalits", zinnen:[
+        {parts:[{t:"In 1950 is het kastenstelsel officieel afgeschaft, maar in de praktijk werkt het nog steeds door.", k:true, why:"Belangrijk contrast tussen de wetgeving (1950) en de dagelijkse werkelijkheid."}]},
+        {parts:[{t:"Indiërs trouwen bijna altijd met iemand uit hun eigen kaste.", k:false}]},
+        {parts:[{t:"Meestal zoeken de ouders een geschikte partner voor hun kinderen uit.", k:false}]},
+        {parts:[{t:"In figuur 5 zie je de verdeling van de kasten in vier hoofdgroepen.", k:false}]},
+        {parts:[{t:"Er is een duidelijke hiërarchie: de ene kaste heeft een hogere status dan de andere.", k:true, why:"Kenmerk van het kastenstelsel: strenge statusverschillen en hiërarchie."}]},
+        {parts:[{t:"Het kastenstelsel bestaat ook in andere landen, maar nergens anders is het systeem zo ingewikkeld en systematisch uitgewerkt als in India.", k:false}]},
+        {parts:[{t:"Elke groep is weer onderverdeeld in vele subkasten: de jati.", k:true, why:"VWO-begrip jati: de verfijnde onderverdeling in subkasten."}]},
+        {parts:[{t:"Helemaal onder aan de sociale ladder staan de dalits (= onaanraakbaren).", k:true, why:"Kernbegrip dalits: de allerlaagste groep op de sociale ladder."}]},
+        {parts:[{t:"Zij worden ook wel de kastelozen genoemd.", k:false}]},
+        {parts:[{t:"Zij wonen in aparte wijken en doen het vuile werk, zoals straten vegen of de wc’s schoonmaken.", k:false}]},
+        {parts:[{t:"In India wonen ruim 200 miljoen dalits.", k:false}]}
+      ]},
+      { id:"t5", titel:"Tekst 5 - Grote bevolking en kinderaantallen", zinnen:[
+        {parts:[{t:"Als je naar het aantal inwoners kijkt (1,4 miljard), is India nu het op een na grootste land ter wereld.", k:false}]},
+        {parts:[{t:"In zestig jaar verdrievoudigde de omvang van de bevolking.", k:false}]},
+        {parts:[{t:"Per jaar komen er 18 miljoen Indiërs bij.", k:false}]},
+        {parts:[{t:"En men verwacht dat de bevolking van India in 2025 groter is dan die van China.", k:false}]},
+        {parts:[
+          {t:"De helft van de bevolking is jonger dan 25 jaar", k:false},
+          {t:" en daardoor is de groene druk hoog.", k:true, why:"Koppelt de jonge leeftijdssamenstelling aan het begrip groene druk."}
+        ]},
+        {parts:[
+          {t:"De bevolking van India zal de komende 25 jaar blijven toenemen, ", k:false},
+          {t:"maar het vruchtbaarheidscijfer neemt af.", k:true, why:"Kernontwikkeling: afnemend vruchtbaarheidscijfer (gemiddeld 2,2 kinderen per vrouw)."}
+        ]},
+        {parts:[{t:"Indiase vrouwen krijgen gemiddeld 2,2 kinderen.", k:false}]},
+        {parts:[{t:"Dat is veel minder dan in 1960 toen ze gemiddeld bijna 6 kinderen kregen.", k:false}]},
+        {parts:[{t:"Er zijn verschillende redenen waarom Indiase vrouwen meer kinderen krijgen dan bijvoorbeeld Nederlandse vrouwen.", k:false}]},
+        {parts:[
+          {t:"Allereerst de huwelijksleeftijd: ", k:false},
+          {t:"veel vrouwen in India trouwen jong", k:true, why:"Reden 1 voor hoog kindertal: jonge huwelijksleeftijd beïnvloedt kinderaantal."},
+          {t:" en dat beïnvloedt het aantal kinderen.", k:false}
+        ]},
+        {parts:[{t:"Ook hebben veel vrouwen geen toegang tot anticonceptie.", k:true, why:"Reden 2 voor hoog kindertal: gebrek aan toegang tot anticonceptie."}]},
+        {parts:[
+          {t:"Daarnaast ", k:false},
+          {t:"kunnen kinderen meehelpen om het gezinsinkomen te verhogen", k:true, why:"Reden 3a voor hoog kindertal: kinderen als economische hulp."},
+          {t:" en ", k:false},
+          {t:"kunnen ze voor hun ouders zorgen als die oud zijn", k:true, why:"Reden 3b voor hoog kindertal: kinderen als oudedagsvoorziening."},
+          {t:".", k:false}
+        ]},
+        {parts:[{t:"Vooral in de steden daalde de afgelopen jaren het geboortecijfer.", k:true, why:"Kern: de daling van het geboortecijfer concentreert zich in de steden."}]},
+        {parts:[{t:"Het verschil met het platteland wordt daardoor steeds groter.", k:false}]},
+        {parts:[
+          {t:"In de stad houdt men minder vast aan oeroude tradities", k:true, why:"Oorzaak daling stad (1): minder vasthouden aan tradities."},
+          {t:" en ", k:false},
+          {t:"trouwen de beter opgeleide vrouwen op latere leeftijd.", k:true, why:"Oorzaak daling stad (2): hoger opgeleide vrouwen trouwen later."}
+        ]}
+      ]},
+      { id:"t6", titel:"Tekst 6 - Basisboek: Demografische druk", zinnen:[
+        {parts:[{t:"De bevolking van een gebied kun je verdelen in drie groepen: jongeren (0 - 20 jaar), productieven (20 - 65 jaar) en ouderen (65+).", k:false}]},
+        {parts:[{t:"In de groep productieven zitten bijna alle mensen die werken.", k:false}]},
+        {parts:[{t:"Zij verdienen het geld voor de andere groepen.", k:false}]},
+        {parts:[{t:"De verhouding tussen de productieve leeftijdsgroep en de niet-productieve groepen noem je de demografische druk.", k:true, why:"Definitie van het kernbegrip demografische druk."}]},
+        {parts:[{t:"Met het woord druk wordt bedoeld dat het deel van de bevolking dat geen geld verdient, een last vormt voor – of anders gezegd: een druk legt op – de groep die wél geld verdient.", k:false}]},
+        {parts:[{t:"Door de vergrijzing en de ontgroening wordt de demografische druk groter.", k:true, why:"Oorzaak waarom demografische druk toeneemt."}]},
+        {parts:[{t:"Je kunt de demografische druk splitsen in groene druk en grijze druk.", k:true, why:"Kernonderscheid tussen de twee componenten van demografische druk."}]},
+        {parts:[{t:"Bij de groene druk gaat het om de druk van de groep van 0- tot 20-jarigen op het aantal 20- tot 65-jarigen.", k:true, why:"Definitie van groene druk."}]},
+        {parts:[{t:"De grijze druk is de verhouding tussen mensen ouder dan 65 jaar en het aantal 20- tot 65-jarigen (figuur 6.8).", k:true, why:"Definitie van grijze druk."}]}
+      ]},
+      { id:"t7", titel:"Tekst 7 - Basisboek: Soorten bevolkingsdiagrammen", zinnen:[
+        {parts:[{t:"Uit de vorm van een bevolkingsdiagram kun je de kenmerken van de leeftijdsopbouw aflezen.", k:false}]},
+        {parts:[{t:"Het diagram van Gambia heeft de vorm van een piramide.", k:false}]},
+        {parts:[{t:"Het belangrijkste kenmerk is het hoge geboortecijfer, waardoor de staven onderin lang zijn.", k:true, why:"Kenmerk van een piramidevorm: hoog geboortecijfer met een brede basis."}]},
+        {parts:[{t:"Bovenin zijn de staven juist heel kort.", k:false}]},
+        {parts:[{t:"Deze piramidevorm zie je vooral in ontwikkelingslanden, waar mensen nog weinig doen aan family planning.", k:false}]},
+        {parts:[{t:"De piramidevorm wijst op een snelgroeiende bevolking.", k:true, why:"Gevolg van een piramidevormig diagram: snelle bevolkingsgroei."}]},
+        {parts:[{t:"Het diagram van Indonesië heeft de vorm van een granaat.", k:false}]},
+        {parts:[{t:"De bevolkingsgroepen onder en midden in het diagram zijn ongeveer even groot.", k:false}]},
+        {parts:[{t:"Dat is kenmerkend voor een meer ontwikkeld land met lage geboortecijfers.", k:false}]},
+        {parts:[{t:"Zo’n granaatvorm geeft aan dat de bevolking nog maar langzaam groeit.", k:true, why:"Gevolg van een granaatvorm: lage geboortecijfers en langzame bevolkingsgroei."}]},
+        {parts:[{t:"Het diagram van Duitsland heeft de vorm van een urn.", k:false}]},
+        {parts:[{t:"De omvang van de jongste groepen is kleiner dan die van de middengroepen.", k:false}]},
+        {parts:[{t:"Dat betekent dat het geboortecijfer daalt.", k:false}]},
+        {parts:[{t:"Ook is er soms een sterfteoverschot.", k:false}]},
+        {parts:[{t:"De urnvorm hoort bij rijke, ontwikkelde landen met een dalende bevolkingsgroei of zelfs een bevolkingsafname.", k:true, why:"Gevolg van een urnvormig diagram: dalende bevolkingsgroei of bevolkingsafname."}]}
+      ]},
+      { id:"t8", titel:"Tekst 8 - Basisboek: Gevolgen van globalisering", zinnen:[
+        {parts:[{t:"Globalisering heeft veel voordelen.", k:false}]},
+        {parts:[{t:"De welvaart en de economische groei in de wereld nemen toe en er is meer vrijheid door het openstellen van grenzen.", k:false}]},
+        {parts:[{t:"Ook is er meer uitwisseling van informatie via moderne informatietechnologie (internet).", k:false}]},
+        {parts:[{t:"Maar globalisering heeft ook een aantal negatieve gevolgen.", k:false}]},
+        {parts:[{t:"Fysisch: door de groei van de industrie in opkomende landen neemt daar de vervuiling van lucht, water en bodem toe.", k:true, why:"Fysisch nadeel: milieu- en bodemvervuiling door opkomende industrie."}]},
+        {parts:[{t:"Sociaal-cultureel: landen worden overspoeld met culturele invloeden vanuit andere landen, waardoor hun eigen cultuur vervaagt.", k:true, why:"Sociaal-cultureel nadeel: vervaging van de eigen inheemse cultuur."}]},
+        {parts:[{t:"Economisch: de ongelijkheid neemt toe.", k:false}]},
+        {parts:[{t:"Er is een toename van de regionale ongelijkheid: verschillen in welvaart tussen gebieden.", k:true, why:"Economisch gevolg 1: groeiende verschillen tussen regio's (platteland vs global cities)."}]},
+        {parts:[{t:"Er is sociale ongelijkheid: grote verschillen in welvaart en ontwikkelingskansen tussen groepen mensen.", k:true, why:"Economisch gevolg 2: grote welvaartsverschillen tussen groepen binnen steden."}]},
+        {parts:[{t:"Politiek: sommige landen willen niet dat hun land te veel wordt beïnvloed door het buitenland, bijvoorbeeld Noord-Korea.", k:false}]},
+        {parts:[{t:"De vrijheid van de bevolking wordt sterk beperkt.", k:true, why:"Politiek nadeel in afgesloten staten: sterke beperking van de burgerlijke vrijheden."}]}
+      ]}
+    ],
+    vragen: [
+      { id:"q1",
+        text:"Leg uit waarom India bij de onafhankelijkheid in 1947 een {federatie} werd met een indeling in {deelstaten}.",
+        pw:[
+          {kw:["centrale","regering","eigen regering","deelsta"], hint:"Wat is een federatie?"},
+          {kw:["zelfbestuur","autonomie","eigen wet","regels","ministerie","hoofdstad","groepen","volken"], hint:"Wat is een deelstaat en wie wonen erin?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"Een <span class='pw'>federatie</span> is een land met één centrale regering met daarnaast in elke deelstaat een eigen regering. Een <span class='pw'>deelstaat</span> is een gebied dat voor een deel zelfbestuur heeft, met een eigen hoofdstad, ministeries en eigen wetten en regels. In India is een enorme variatie aan volken, talen en religies; deze verschillende groepen wonen in verschillende deelstaten. Daarom werd India bij de onafhankelijkheid een federatie: zo kon rekening worden gehouden met het culturele mozaïek van het land."
+      },
+      { id:"q2",
+        text:"Leg uit waarom het Engels in India de {lingua franca} is en niet het Hindi.",
+        pw:[
+          {kw:["voertaal","moedertaal","verschillende","grote schaal","begrijpen","communic"], hint:"Wat betekent het begrip lingua franca?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"Een <span class='pw'>lingua franca</span> is een taal die op grote schaal als voertaal wordt gebruikt door mensen met verschillende moedertalen om met elkaar te kunnen communiceren. Hoewel twee derde van de Indiërs Hindi spreekt, is het meestal niet hun moedertaal en vooral in het zuiden voelen mensen zich achtergesteld bij het Hindi. Daarom fungeert het Engels als neutrale overkoepelende taal (lingua franca) om de taalverschillen te overbruggen en niet het Hindi."
+      },
+      { id:"q3",
+        text:"Leg uit waarom het {kastenstelsel} zorgt voor hardnekkige {sociale ongelijkheid} die ook na 1950 doorwerkt.",
+        pw:[
+          {kw:["geboorte","geboren","groep","kaste","veranderen","beroep","trouwen"], hint:"Hoe werkt het kastenstelsel?"},
+          {kw:["welvaart","kansen","ontwikkelingskansen","verschillen","praktijk","traditie"], hint:"Wat betekent sociale ongelijkheid en waarom werkt dit door na 1950?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"Het <span class='pw'>kastenstelsel</span> is de indeling van de samenleving in vaste sociale groepen; vanaf je geboorte ligt je kaste vast, je kunt niet wisselen en het bepaalt je beroep en huwelijkspartner. <span class='pw'>Sociale ongelijkheid</span> zijn grote verschillen in welvaart en ontwikkelingskansen tussen groepen. Hoewel het stelsel in 1950 officieel is afgeschaft, houden Indiërs in de praktijk nog sterk vast aan oeroude tradities. Daarom zorgt het kastenstelsel nog altijd voor grote sociale ongelijkheid: iemands maatschappelijke kansen worden nog steeds bepaald door zijn geboorte."
+      },
+      { id:"q4",
+        text:"Leg uit waardoor in Indiase steden het {geboortecijfer} sneller daalt dan op het platteland.",
+        pw:[
+          {kw:["levendgeborenen","duizend","jaar","gemiddeld","aantal kinderen"], hint:"Wat betekent het begrip geboortecijfer?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"Het <span class='pw'>geboortecijfer</span> is het gemiddelde aantal levendgeborenen per duizend inwoners per jaar. In steden houdt de bevolking minder vast aan oeroude tradities, zijn vrouwen beter opgeleid, trouwen ze later en is er meer toegang tot anticonceptie; op het platteland dienen kinderen nog vaker als bron van inkomsten en oudedagsverzorging. Daarom daalt het geboortecijfer in de steden veel sneller dan op het platteland, waardoor de demografische kloof tussen stad en platteland groeit."
+      },
+      { id:"q5",
+        text:"Leg uit waarom een jonge bevolking leidt tot een hoge {groene druk} en wat het verband is met {demografische druk}.",
+        pw:[
+          {kw:["0-20","jongeren","productieven","20-65","verhouding","last"], hint:"Wat is groene druk en wie moet die last dragen?"},
+          {kw:["productieve","niet-productieve","last","inkomen"], hint:"Wat betekent demografische druk?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"De <span class='pw'>groene druk</span> is de verhouding tussen de groep van 0- tot 20-jarigen en de productieve groep van 20- tot 65-jarigen; in India is de helft van de bevolking jonger dan 25 jaar. De <span class='pw'>demografische druk</span> is de totale verhouding tussen de productieve en de niet-productieve leeftijdsgroepen. Omdat de jonge bevolking afhankelijk is van de werkenden voor voedsel en onderwijs, zorgt het grote aandeel kinderen voor een zware belasting op de werkende generatie. Daarom leidt de jonge leeftijdsopbouw in India tot een zeer hoge groene druk en een zware demografische druk op de werkenden."
+      },
+      { id:"q6",
+        text:"Leg uit waarom het koloniale verleden van India als {exploitatiekolonie} van het Britse {moederland} nog steeds merkbaar is in de samenleving.",
+        pw:[
+          {kw:["grondstoffen","voordeel","thee","katoen","jute","Europeanen","economisch"], hint:"Wat is een exploitatiekolonie en waarvoor werd India gebruikt?"},
+          {kw:["gezag","Engeland","staat","bestuur","Britten"], hint:"Wat betekent moederland?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"Een <span class='pw'>exploitatiekolonie</span> is een kolonie die door (meestal) Europeanen werd gebruikt om er zelf voordeel van te hebben door het winnen van grondstoffen zoals thee, katoen en jute. Het <span class='pw'>moederland</span> (Engeland) oefende het gezag uit over de kolonie en bracht honderden vorstendommen onder één centraal bestuur. Daarom is deze koloniale periode nog altijd merkbaar in India: de Britten legden het spoorwegnetwerk en de bestuurlijke grenzen aan en introduceerden het Engels, dat nu als lingua franca de honderden taalverschillen overbrugt."
+      },
+      { id:"q7",
+        text:"Leg uit wat de relatie is tussen een {bevolkingsdiagram} en de {leeftijdsopbouw} van een land.",
+        pw:[
+          {kw:["staafdiagram","leeftijd","grafiek","vorm","staven"], hint:"Wat is een bevolkingsdiagram?"},
+          {kw:["samenstelling","groepen","jongeren","productieven","ouderen","leeftijdsgroepen"], hint:"Wat betekent leeftijdsopbouw?"}
+        ],
+        concl:["daarom","dus","hierdoor","daardoor"],
+        model:"Een <span class='pw'>bevolkingsdiagram</span> is een staafdiagram waarin de samenstelling van de bevolking naar leeftijd en geslacht grafisch wordt weergegeven. De <span class='pw'>leeftijdsopbouw</span> is de verdeling van de bevolking in verschillende leeftijdsgroepen (zoals jongeren, productieven en ouderen). Uit de specifieke vorm van het diagram (piramide, granaat of urn) kun je direct aflezen of een bevolking snel groeit, stabiel blijft of krimpt. Daarom is een bevolkingsdiagram hét visuele hulpmiddel om in één oogopslag inzicht te krijgen in de leeftijdsopbouw en de demografische fase van een land."
+      }
+    ]
+  }
+};
+
+
+/* =========================================================
+   STATE MANAGEMENT (PER PARAGRAAF IN EEN CENTRALE JSON)
+   ========================================================= */
+const STORE_KEY = "geo-india-vwo-h5-v5";
+let currentParId = "5.1";
+let state = freshState();
+
+function freshState(){
+  return {
+    versie: 2,
+    hoofdstuk: "H5 India",
+    naam: "",
+    paragrafen: {},
+    laatstOpgeslagen: null
+  };
+}
+
+function getParState(pid){
+  if(!state.paragrafen[pid]){
+    state.paragrafen[pid] = { fc:{known:{}}, hl:{}, q:{} };
+  }
+  return state.paragrafen[pid];
+}
+
+function qState(qid){
+  const ps = getParState(currentParId);
+  if(!ps.q[qid] || !Array.isArray(ps.q[qid].sel)) ps.q[qid] = {sel:[], pwChecked:false, pwOk:false, tries:0, expl:[], concl:"", passed:false, self:[false,false,false], done:false};
+  return ps.q[qid];
+}
+
+function hlState(hid){
+  const ps = getParState(currentParId);
+  if(!ps.hl[hid] || !Array.isArray(ps.hl[hid].sel)) ps.hl[hid] = {sel:[], checked:false};
+  return ps.hl[hid];
+}
+
+function persist(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+function toast(msg){
+  const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("show");
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2600);
+}
+const esc = s => String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* =========================================================
+   PARAGRAAF WISSELEN
+   ========================================================= */
+function switchPar(pid){
+  if(!PARAGRAFEN[pid]) return;
+  currentParId = pid;
+  document.querySelectorAll("#parTabs button").forEach(b=>{
+    b.classList.toggle("active", b.dataset.pid === pid);
+  });
+  const par = PARAGRAFEN[pid];
+  document.getElementById("headerTitle").textContent = par.titel;
+  document.getElementById("headerSubtitle").textContent = par.subtitel;
+  document.getElementById("pdfBtn").textContent = `Download PDF (par. ${pid})`;
+  fcDeck = []; fcIdx = 0; curQ = 0;
+  renderAll();
+  toast(`Paragraaf ${pid} geopend`);
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+document.querySelectorAll("#tabs button").forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll("#tabs button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll("section.tab").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById(b.dataset.tab).classList.add("active");
+    if(b.dataset.tab==="voortgang") renderProgress();
+  };
+});
+document.getElementById("studentName").addEventListener("input", e=>{ state.naam=e.target.value; persist(); });
+
+/* =========================================================
+   OVERZICHT RENDEREN
+   ========================================================= */
+function renderOverzicht(){
+  const par = PARAGRAFEN[currentParId];
+  let h = `
+    <div class="card">
+      <span class="pill">Je leert</span>
+      <h2 style="margin-top:8px">${esc(par.jeLeert)}</h2>
+      <p style="margin:0">${par.inleiding}</p>
+    </div>
+
+    <div class="card">
+      <h3>Wat moet je kennen en kunnen?</h3>
+      <ul class="tight">
+        ${par.leerdoelen.map(ld=>`<li>${esc(ld)}</li>`).join("")}
+      </ul>
+    </div>
+
+    <div class="grid2">
+      ${par.theorieBlokken.map(b=>`
+        <div class="card">
+          <h3>${esc(b.titel)}</h3>
+          <ul class="tight">
+            ${b.punten.map(p=>`<li>${p}</li>`).join("")}
+          </ul>
+        </div>
+      `).join("")}
+    </div>
+
+    <div class="card">
+      <h3>Samenhang in één schema</h3>
+      <div class="schema">
+        ${par.schema.map(s=>`
+          <div><b>${esc(s.titel)}</b><br>${s.tekst}</div>
+        `).join("")}
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Alle begrippen van paragraaf ${esc(currentParId)}</h3>
+      <table>
+        ${par.begrippen.map(([b,d])=>`<tr><td>${esc(b)}</td><td>${esc(d)}</td></tr>`).join("")}
+      </table>
+    </div>
+  `;
+  document.getElementById("overzichtContainer").innerHTML = h;
+}
+
+/* =========================================================
+   FLASHCARDS
+   ========================================================= */
+let fcDeck=[], fcIdx=0, fcReverse=false;
+function getBegrippen(){ return PARAGRAFEN[currentParId].begrippen; }
+
+function fcBuildDeck(keepCurrent){
+  const begrippen = getBegrippen();
+  const ps = getParState(currentParId);
+  const only = document.getElementById("fcOnlyUnknown").checked;
+  const cur = fcDeck[fcIdx];
+  let base = begrippen.map((_,i)=>i);
+  if(fcDeck._order && fcDeck._order.length === begrippen.length) base = fcDeck._order.slice();
+  const order = base;
+  fcDeck = only ? order.filter(i=>!ps.fc.known[begrippen[i][0]]) : order.slice();
+  fcDeck._order = order;
+  if(keepCurrent && fcDeck.includes(cur)) fcIdx = fcDeck.indexOf(cur);
+  else if(fcIdx>=fcDeck.length) fcIdx=0;
+  fcRender();
+}
+
+function fcRender(){
+  const flash=document.getElementById("flash");
+  flash.classList.remove("flipped");
+  const begrippen = getBegrippen();
+  const ps = getParState(currentParId);
+  const known = Object.values(ps.fc.known).filter(Boolean).length;
+  document.getElementById("fcCount").textContent = `${known} / ${begrippen.length} gekend`;
+  document.getElementById("fcBar").style.width = (begrippen.length ? known/begrippen.length*100 : 0)+"%";
+  const front=document.getElementById("fcFront"), back=document.getElementById("fcBack");
+  flash.querySelector(".known-tag")?.remove();
+  if(!fcDeck.length){
+    front.textContent="Alles gekend!"; back.textContent="Zet het vinkje uit of klik op 'Alles opnieuw oefenen'.";
+  } else {
+    const [b,d]=begrippen[fcDeck[fcIdx]];
+    setTimeout(()=>{ front.textContent = fcReverse? d : b; back.textContent = fcReverse? b : d; }, 120);
+    document.querySelector(".face.front").style.fontSize = fcReverse? "1.15rem":"1.7rem";
+    document.querySelector(".face.back").style.fontSize = fcReverse? "1.6rem":"1.15rem";
+    if(ps.fc.known[b]){ const t=document.createElement("span"); t.className="known-tag"; t.textContent="Gekend"; flash.querySelector(".front").appendChild(t); }
+  }
+  const curTerm = fcDeck.length? begrippen[fcDeck[fcIdx]][0] : null;
+  document.getElementById("fcList").innerHTML = begrippen.map(([b],i)=>
+    `<span class="${ps.fc.known[b]?'k':''} ${b===curTerm?'cur':''}" onclick="fcJump(${i})">${esc(b)}</span>`).join("");
+}
+
+function fcFlip(){ document.getElementById("flash").classList.toggle("flipped"); }
+function fcMove(d){ if(!fcDeck.length) return; fcIdx=(fcIdx+d+fcDeck.length)%fcDeck.length; fcRender(); }
+function fcMark(k){
+  if(!fcDeck.length) return;
+  const begrippen = getBegrippen();
+  const b=begrippen[fcDeck[fcIdx]][0];
+  const ps = getParState(currentParId);
+  ps.fc.known[b]=k; persist();
+  const only=document.getElementById("fcOnlyUnknown").checked;
+  if(only && k){ fcDeck.splice(fcIdx,1); if(fcIdx>=fcDeck.length) fcIdx=0; fcRender(); }
+  else fcMove(1);
+}
+function fcJump(i){
+  document.getElementById("fcOnlyUnknown").checked=false;
+  fcBuildDeck(); fcIdx=fcDeck.indexOf(i); fcRender();
+}
+function fcShuffle(){
+  const begrippen = getBegrippen();
+  const o=begrippen.map((_,i)=>i);
+  for(let i=o.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[o[i],o[j]]=[o[j],o[i]];}
+  fcDeck._order=o; fcIdx=0; fcBuildDeck(); toast("Kaarten geschud");
+}
+function fcToggleMode(){
+  fcReverse=!fcReverse;
+  document.getElementById("fcModeBtn").textContent = fcReverse? "Toon: betekenis &rarr; begrip" : "Toon: begrip &rarr; betekenis";
+  fcRender();
+}
+function fcReset(){
+  if(confirm("Alle kaarten voor deze paragraaf weer op 'nog oefenen' zetten?")){
+    getParState(currentParId).fc.known={}; persist(); fcBuildDeck();
+  }
+}
+document.addEventListener("keydown", e=>{
+  if(!document.getElementById("flashcards").classList.contains("active")) return;
+  if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+  if(e.code==="Space"){ e.preventDefault(); fcFlip(); }
+  if(e.key==="ArrowRight") fcMove(1);
+  if(e.key==="ArrowLeft") fcMove(-1);
+});
+
+/* =========================================================
+   KERN HERKENNEN (MARKEREN PER CHUNK)
+   ========================================================= */
+function getChunks(t){
+  const chunks=[];
+  if(!t || !t.zinnen) return chunks;
+  t.zinnen.forEach((z, zi)=>{
+    const parts = (z && z.parts) ? z.parts : [{ t: (z && z.s)||"", k: !!(z && z.k), why: (z && z.why)||"" }];
+    parts.forEach((p, pi)=>{
+      chunks.push({ id:`${zi}_${pi}`, zi, pi, t:p.t, k:!!p.k, why:p.why||"" });
+    });
+  });
+  return chunks;
+}
+
+function renderHL(){
+  const par = PARAGRAFEN[currentParId];
+  document.getElementById("hlContainer").innerHTML = par.teksten.map(t=>{
+    const st=hlState(t.id);
+    const chunks = getChunks(t);
+    const nKey = chunks.filter(c=>c.k).length;
+    
+    const zinnenHtml = t.zinnen.map((z, zi)=>{
+      const parts = (z && z.parts) ? z.parts : [{ t: (z && z.s)||"", k: !!(z && z.k), why: (z && z.why)||"" }];
+      return parts.map((p, pi)=>{
+        const cid = `${zi}_${pi}`;
+        let c = "sent";
+        const sel = st.sel.includes(cid);
+        if(st.checked){
+          if(sel && p.k) c += " r-ok";
+          else if(sel && !p.k) c += " r-wrong";
+          else if(!sel && p.k) c += " r-miss";
+        } else if(sel) {
+          c += " sel";
+        }
+        return `<span class="${c}" onclick="hlToggle('${t.id}','${cid}')">${esc(p.t)}</span>`;
+      }).join("");
+    }).join(" ");
+
+    let fb="";
+    if(st.checked){
+      const goed = chunks.filter(c=>c.k && st.sel.includes(c.id)).length;
+      const fout = chunks.filter(c=>!c.k && st.sel.includes(c.id)).length;
+      const cls = (goed===nKey && fout===0) ? "ok" : (goed>=nKey-1 && fout<=1 ? "warn" : "bad");
+      const msg = cls==="ok" ? "Perfect! Je hebt precies de kernstukken gevonden." :
+        `Je vond ${goed} van de ${nKey} kernstukken${fout?` en markeerde ${fout} bijzaak-deel/delen`:""}.`;
+      fb=`<div class="feedback ${cls}"><b>${msg}</b>
+        <ul class="why">${chunks.filter(c=>c.k).map(c=>`<li><i>"${esc(c.t.trim())}"</i> &rarr; ${esc(c.why)}</li>`).join("")}</ul></div>`;
+    }
+
+    return `<div class="card">
+      <div class="q-head"><h3>${esc(t.titel)}</h3><span class="pill">Markeer ${nKey} kernen</span></div>
+      <p class="hl-text ${st.checked?'locked':''}">${zinnenHtml}</p>
+      <div class="toolbar noprint">
+        ${st.checked? `<button class="sec" onclick="hlReset('${t.id}')">Opnieuw proberen</button>` :
+          `<button onclick="hlCheck('${t.id}')">Controleer</button><span class="muted" style="font-size:.9rem">${st.sel.length} gemarkeerd</span>`}
+      </div>${fb}</div>`;
+  }).join("");
+}
+function hlToggle(id,cid){
+  const st=hlState(id); if(st.checked) return;
+  const p=st.sel.indexOf(cid); p>=0? st.sel.splice(p,1) : st.sel.push(cid);
+  persist(); renderHL();
+}
+function hlCheck(id){
+  const st=hlState(id);
+  if(!st.sel.length){ toast("Klik eerst op een of meer zinsdelen om te markeren."); return; }
+  st.checked=true; persist(); renderHL();
+}
+function hlReset(id){ getParState(currentParId).hl[id]={sel:[],checked:false}; persist(); renderHL(); }
+
+/* =========================================================
+   LEG-UIT-VRAGEN
+   ========================================================= */
+let curQ=0;
+function getVragen(){ return PARAGRAFEN[currentParId].vragen; }
+
+function parseQuestion(text){
+  const out=[]; let pwI=0; const re=/\{([^}]+)\}|([^\s{}]+)/g; let m;
+  while((m=re.exec(text))){
+    if(m[1]) out.push({t:m[1], pw:pwI++, click:true});
+    else { const t=m[2]; out.push({t, pw:-1, click:/[A-Za-zÀ-ÿ0-9]/.test(t)}); }
+  }
+  return out;
+}
+function pwLabels(q){ return parseQuestion(q.text).filter(c=>c.pw>=0).map(c=>c.t); }
+
+function renderQNav(){
+  const vragen = getVragen();
+  document.getElementById("qnav").innerHTML = vragen.map((q,i)=>
+    `<button class="${qState(q.id).done?'done':''} ${i===curQ?'cur':''}" onclick="gotoQ(${i})">${i+1}</button>`).join("");
+}
+function gotoQ(i){ curQ=i; renderQ(); }
+
+function renderQ(){
+  renderQNav();
+  const vragen = getVragen();
+  if(!vragen.length){ document.getElementById("qContainer").innerHTML = "<p>Geen vragen in deze paragraaf.</p>"; return; }
+  if(curQ >= vragen.length) curQ = 0;
+  const q=vragen[curQ], st=qState(q.id), chunks=parseQuestion(q.text), labels=pwLabels(q);
+  
+  const qHtml = chunks.map((c,i)=>{
+    if(!c.click) return esc(c.t);
+    let cls="w"; const sel=st.sel.includes(i);
+    if(st.pwChecked){
+      if(sel && c.pw>=0) cls+=" good";
+      else if(sel && c.pw<0) cls+=" wrong";
+      else if(!sel && c.pw>=0 && st.pwOk) cls+=" good";
+      else if(!sel && c.pw>=0 && st.tries>=2) cls+=" missed";
+    } else if(sel) cls+=" sel";
+    return `<span class="${cls}" onclick="qToggle(${i})">${esc(c.t)}</span>`;
+  }).join(" ");
+
+  let pwFb="";
+  if(st.pwChecked && !st.pwOk){
+    pwFb = st.tries>=2
+      ? `<div class="feedback warn">De puntwoorden zijn: <b>${labels.map(esc).join(", ")}</b>. Ze zijn nu voor je aangegeven. Ga verder met stap 2.</div>`
+      : `<div class="feedback bad">Nog niet helemaal goed. Tip: puntwoorden zijn de <b>begrippen en tegenstellingen</b> in de vraag. Woorden als "leg uit", "waarom", "India" zijn geen puntwoorden. Probeer het nog een keer.</div>`;
+  } else if(st.pwOk){
+    pwFb = `<div class="feedback ok">Goed! De puntwoorden zijn: <b>${labels.map(esc).join(", ")}</b>.</div>`;
+  }
+  const step2Open = st.pwOk || st.tries>=2;
+
+  const explHtml = labels.map((l,i)=>`
+    <label class="pw-label"><span class="pill">${i+1}</span>Leg uit: <u>${esc(l)}</u> <span class="muted" style="font-weight:400;font-size:.88rem">- ${esc(q.pw[i].hint)}</span></label>
+    <textarea data-e="${i}" placeholder="Schrijf een volledige zin over '${esc(l)}'..." oninput="qInput()">${esc(st.expl[i]||"")}</textarea>`).join("");
+
+  document.getElementById("qContainer").innerHTML = `
+    <div class="q-head"><span class="pill">Vraag ${curQ+1} van ${vragen.length}</span>${st.done?'<span class="pill" style="background:var(--ok-l);color:var(--ok)">Klaar</span>':''}</div>
+    <div class="step" style="border:none;margin-top:4px;padding-top:4px">
+      <h4>Stap 1 - Klik op de puntwoorden in de vraag</h4>
+      <div class="q-text ${st.pwChecked&&(st.pwOk||st.tries>=2)?'locked':''}">${qHtml}</div>
+      ${!(st.pwOk||st.tries>=2)?`<button onclick="qCheckPW()">Controleer puntwoorden</button>`:""}
+      ${pwFb}
+    </div>
+    ${step2Open ? `
+    <div class="step">
+      <h4>Stap 2 - Leg elk puntwoord uit</h4>
+      <p class="muted" style="margin:0">Wat betekent het begrip, en wat weet je erover in deze situatie (India)?</p>
+      ${explHtml}
+    </div>
+    <div class="step">
+      <h4>Stap 3 - Concluderend antwoord</h4>
+      <p class="muted" style="margin:0 0 6px">Verbind de uitleg met de vraag. Begin bijvoorbeeld met <b>Daarom...</b>, <b>Dus...</b> of <b>Hierdoor...</b></p>
+      <textarea id="conclIn" placeholder="Daarom ..." oninput="qInput()">${esc(st.concl||"")}</textarea>
+      <div class="toolbar" style="margin-top:8px"><button onclick="qCheckAnswer()">Controleer mijn antwoord</button></div>
+      <div id="ansFb"></div>
+    </div>` : `
+    <div class="step" style="background:#fdfcf9;border:1.5px dashed #d5cfc4;border-radius:10px;padding:16px;margin-top:16px;text-align:center">
+      <p class="muted" style="margin:0;font-size:0.95rem"><b>Stap 2 en stap 3 zijn vergrendeld</b><br>Klik eerst op de juiste puntwoorden in stap 1 en druk op <b>Controleer puntwoorden</b> om verder te gaan.</p>
+    </div>`}
+    <div id="modelBox"></div>
+    <div class="toolbar noprint" style="justify-content:space-between;margin-top:18px">
+      <button class="sec" onclick="gotoQ(Math.max(0,curQ-1))" ${curQ===0?'disabled':''}>&larr; Vorige vraag</button>
+      <button class="sec" onclick="gotoQ(Math.min(vragen.length-1,curQ+1))" ${curQ===vragen.length-1?'disabled':''}>Volgende vraag &rarr;</button>
+    </div>`;
+  if(st.passed) showModel();
+}
+
+function qToggle(i){
+  const vragen = getVragen();
+  const st=qState(vragen[curQ].id);
+  if(st.pwOk || st.tries>=2) return;
+  if(st.pwChecked){ st.pwChecked=false; }
+  const p=st.sel.indexOf(i); p>=0? st.sel.splice(p,1) : st.sel.push(i);
+  persist(); renderQ();
+}
+
+function qCheckPW(){
+  const vragen = getVragen();
+  const q=vragen[curQ], st=qState(q.id), chunks=parseQuestion(q.text);
+  if(!st.sel.length){ toast("Klik eerst op de puntwoorden in de vraag."); return; }
+  const need=chunks.map((c,i)=>c.pw>=0?i:-1).filter(i=>i>=0);
+  const ok = need.every(i=>st.sel.includes(i)) && st.sel.every(i=>need.includes(i));
+  st.pwChecked=true; st.pwOk=ok; if(!ok) st.tries++;
+  persist(); renderQ();
+}
+
+function qInput(){
+  const vragen = getVragen();
+  const st=qState(vragen[curQ].id);
+  document.querySelectorAll("#qContainer textarea[data-e]").forEach(t=>st.expl[+t.dataset.e]=t.value);
+  const cIn=document.getElementById("conclIn");
+  if(cIn) st.concl=cIn.value;
+  persist();
+}
+
+function startsWithOmdat(s){ return /^\s*omdat\b/i.test(s); }
+function wordCount(s){ return (s.trim().match(/\S+/g)||[]).length; }
+
+function qCheckAnswer(){
+  qInput();
+  const vragen = getVragen();
+  const q=vragen[curQ], st=qState(q.id), labels=pwLabels(q);
+  const errors=[], tips=[], goods=[];
+  labels.forEach((l,i)=>{
+    const t=(st.expl[i]||"").trim(), low=t.toLowerCase();
+    if(wordCount(t)<5) errors.push(`Uitleg bij <b>${esc(l)}</b> is te kort. Schrijf een volledige zin.`);
+    else if(startsWithOmdat(t)) errors.push(`Uitleg bij <b>${esc(l)}</b> begint met "Omdat". Begin je zin anders.`);
+    else if(q.pw[i].kw.some(k=>low.includes(k))) goods.push(`Uitleg bij <b>${esc(l)}</b> goed beantwoord.`);
+    else tips.push(`Uitleg bij <b>${esc(l)}</b>: ${esc(q.pw[i].hint)} Gebruik de betekenis van het begrip.`);
+  });
+  const c=(st.concl||"").trim(), cl=c.toLowerCase();
+  if(wordCount(c)<5) errors.push("Je concluderende antwoord is te kort.");
+  else if(startsWithOmdat(c)) errors.push('Je conclusie begint met <b>"Omdat"</b>. Dat mag niet! Begin bijvoorbeeld met "Daarom...".');
+  else if(!q.concl.some(w=>cl.includes(w))) tips.push('Je conclusie bevat geen conclusiewoord. Gebruik <b>daarom</b>, <b>dus</b> of <b>hierdoor</b>.');
+  else goods.push("Concluderend antwoord opgebouwd.");
+
+  const fb=document.getElementById("ansFb");
+  if(errors.length){
+    fb.innerHTML=`<div class="feedback bad"><b>Verbeter eerst:</b><ul class="why">${errors.map(e=>`<li>${e}</li>`).join("")}</ul></div>`;
+    return;
+  }
+  st.passed=true; persist();
+  fb.innerHTML = `<div class="feedback ${tips.length?'warn':'ok'}">
+    ${goods.length?`<ul class="why">${goods.map(g=>`<li>${g}</li>`).join("")}</ul>`:""}
+    ${tips.length?`<b>Tips om je antwoord sterker te maken:</b><ul class="why">${tips.map(t=>`<li>${t}</li>`).join("")}</ul><p style="margin:6px 0 0">Je mag je antwoord aanpassen en opnieuw controleren.</p>`:"<b>Netjes opgebouwd!</b>"}
+  </div>`;
+  showModel();
+}
+
+function showModel(){
+  const vragen = getVragen();
+  const q=vragen[curQ], st=qState(q.id);
+  const checks=["Ik heb alle puntwoorden uitgelegd.","Mijn uitleg gaat over India (de situatie in de vraag).","Mijn conclusie geeft echt antwoord op de vraag."];
+  document.getElementById("modelBox").innerHTML = `
+    <div class="step">
+      <h4>Vergelijk met het modelantwoord</h4>
+      <div class="model">${q.model}</div>
+      <div class="check-list" style="margin-top:10px">
+        <b>Controleer jezelf:</b>
+        ${checks.map((c,i)=>`<label><input type="checkbox" ${st.self[i]?'checked':''} onchange="qSelf(${i},this.checked)"> ${c}</label>`).join("")}
+      </div>
+      <div class="toolbar" style="margin-top:10px">
+        <button class="okb" onclick="qDone()" ${st.done?'disabled':''}>${st.done?'Vraag afgerond':'Vraag afronden'}</button>
+      </div>
+    </div>`;
+}
+
+function qSelf(i,v){ qState(getVragen()[curQ].id).self[i]=v; persist(); }
+function qDone(){
+  const q = getVragen()[curQ];
+  const st=qState(q.id);
+  if(!st.self.every(Boolean)){ toast("Vink eerst de drie controlepunten aan (pas je antwoord aan als dat nodig is)."); return; }
+  st.done=true; persist(); toast("Vraag afgerond!");
+  if(curQ < getVragen().length - 1){ curQ++; } renderQ();
+}
+
+/* =========================================================
+   VOORTGANG
+   ========================================================= */
+function statsPar(pid){
+  const par = PARAGRAFEN[pid];
+  const ps = getParState(pid);
+  const known = Object.values(ps.fc.known).filter(Boolean).length;
+  const hlDone = par.teksten.filter(t=>ps.hl[t.id] && ps.hl[t.id].checked).length;
+  let hlGoed=0, hlTot=0;
+  par.teksten.forEach(t=>{
+    const st = ps.hl[t.id] || {sel:[], checked:false};
+    const chunks = getChunks(t);
+    chunks.forEach(c=>{
+      if(c.k){
+        hlTot++;
+        if(st.checked && st.sel.includes(c.id)) hlGoed++;
+      }
+    });
+  });
+  const qDoneN = par.vragen.filter(q=>ps.q[q.id] && ps.q[q.id].done).length;
+  return { known, begrippenTot: par.begrippen.length, hlDone, tekstenTot: par.teksten.length, hlGoed, hlTot, qDoneN, vragenTot: par.vragen.length };
+}
+
+function renderProgress(){
+  const pids = Object.keys(PARAGRAFEN);
+  let h = "";
+  const row=(label,n,tot)=>`<p style="margin:12px 0 4px"><b>${label}</b> <span class="muted">${n} / ${tot}</span></p><div class="progressbar"><span style="width:${tot?n/tot*100:0}%"></span></div>`;
+  
+  pids.forEach(pid=>{
+    const par = PARAGRAFEN[pid];
+    const s = statsPar(pid);
+    const isActive = pid === currentParId;
+    h += `
+      <div style="margin-bottom:24px;border:1.5px solid ${isActive?'var(--primary)':'#e2dbd0'};border-radius:12px;padding:16px;background:${isActive?'#fcfdfd':'#fff'}">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <h3 style="margin:0">${esc(par.titel)} ${isActive?'<span class="pill">Huidig actief</span>':''}</h3>
+          <button class="sec" style="padding:4px 10px;font-size:0.85rem" onclick="switchPar('${pid}')">Open deze paragraaf</button>
+        </div>
+        ${row("Begrippen gekend", s.known, s.begrippenTot)}
+        ${row("Teksten gecontroleerd", s.hlDone, s.tekstenTot)}
+        ${row("Kernstukken gevonden", s.hlGoed, s.hlTot)}
+        ${row("Leg-uit-vragen afgerond", s.qDoneN, s.vragenTot)}
+      </div>
+    `;
+  });
+
+  if(state.laatstOpgeslagen){
+    h += `<p class="muted" style="font-size:.85rem">Laatst opgeslagen als bestand: ${new Date(state.laatstOpgeslagen).toLocaleString("nl-NL")}</p>`;
+  }
+  document.getElementById("progressOverview").innerHTML = h;
+}
+
+/* =========================================================
+   OPSLAAN / LADEN (JSON - BEWAART HEEL HOOFDSTUK 5)
+   ========================================================= */
+function fileBase(pid){
+  const n=(state.naam||"leerling").trim().replace(/[^\w\- ]+/g,"").replace(/\s+/g,"_")||"leerling";
+  return pid ? `India_${pid.replace('.','-')}_${n}` : `H5_India_Voortgang_${n}`;
+}
+
+function saveJSON(){
+  qInputSafe();
+  state.laatstOpgeslagen=new Date().toISOString();
+  const blob=new Blob([JSON.stringify({app:"geo-india-vwo-h5", ...state},null,2)],{type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=fileBase()+".json";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  persist(); toast("Totale voortgang (alle paragrafen) opgeslagen");
+}
+
+function loadJSON(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(d.app!=="geo-india-vwo-h5" && d.app!=="geo-india-h5" && d.app!=="geo-india-5-1") throw new Error("Dit is geen voortgangsbestand van deze opdracht.");
+      
+      if(d.app === "geo-india-5-1"){
+        state = freshState();
+        state.naam = d.naam || "";
+        state.paragrafen["5.1"] = { fc: d.fc||{known:{}}, hl: d.hl||{}, q: d.q||{} };
+      } else {
+        delete d.app;
+        state = Object.assign(freshState(), d);
+      }
+      persist(); renderAll(); toast("Voortgang succesvol geladen!");
+    }catch(e){ alert("Kon het bestand niet laden: "+e.message); }
+    ev.target.value="";
+  };
+  r.readAsText(f);
+}
+function qInputSafe(){ if(document.getElementById("conclIn")) qInput(); }
+
+/* =========================================================
+   PDF EXPORT (PER PARAGRAAF)
+   ========================================================= */
+function stripHtml(h){ const d=document.createElement("div"); d.innerHTML=h; return d.textContent; }
+
+function downloadPDF(){
+  qInputSafe();
+  if(!window.jspdf){ alert("De PDF-module kon niet worden geladen (geen internet?). Je kunt ook Ctrl+P gebruiken en 'Opslaan als PDF' kiezen."); window.print(); return; }
+  const { jsPDF } = window.jspdf;
+  const doc=new jsPDF({unit:"mm",format:"a4"});
+  const M=18, W=210-2*M; let y=20;
+  const need=h=>{ if(y+h>280){ doc.addPage(); y=20; } };
+  const txt=(s,{size=11,bold=false,color=[31,42,51],indent=0,gap=1.5}={})=>{
+    doc.setFont("helvetica",bold?"bold":"normal"); doc.setFontSize(size); doc.setTextColor(...color);
+    const lines=doc.splitTextToSize(String(s),W-indent);
+    lines.forEach(l=>{ need(size*0.45); doc.text(l,M+indent,y); y+=size*0.45; });
+    y+=gap;
+  };
+  const line=()=>{ need(4); doc.setDrawColor(200); doc.line(M,y,210-M,y); y+=5; };
+
+  const pid = currentParId;
+  const par = PARAGRAFEN[pid];
+  const s = statsPar(pid);
+  const ps = getParState(pid);
+
+  doc.setFillColor(11,79,108); doc.rect(0,0,210,14,"F");
+  doc.setTextColor(255); doc.setFont("helvetica","bold"); doc.setFontSize(11);
+  doc.text(`De Geo 3 vwo - ${par.titel}`,M,9);
+  y=24;
+  txt(`Verslag oefenopdracht - Paragraaf ${pid}`,{size:17,bold:true,color:[11,79,108]});
+  txt(`Naam: ${state.naam||"-"}`,{size:11});
+  txt(`Datum: ${new Date().toLocaleString("nl-NL")}`,{size:11,gap:4});
+  txt(`Samenvatting voortgang paragraaf ${pid}`,{size:13,bold:true,color:[194,24,91]});
+  txt(`Begrippen gekend (flashcards): ${s.known} / ${s.begrippenTot}`);
+  txt(`Kern herkennen: ${s.hlDone} / ${s.tekstenTot} teksten gecontroleerd, ${s.hlGoed} / ${s.hlTot} kernen gevonden`);
+  txt(`Leg-uit-vragen afgerond: ${s.qDoneN} / ${s.vragenTot}`,{gap:3});
+  
+  const nog=par.begrippen.filter(([b])=>!ps.fc.known[b]).map(([b])=>b);
+  if(nog.length) txt("Begrippen om nog te oefenen: "+nog.join(", "),{size:10,color:[110,110,110],gap:4});
+  line();
+
+  txt("Kern herkennen",{size:14,bold:true,color:[11,79,108],gap:3});
+  par.teksten.forEach(t=>{
+    const st=ps.hl[t.id] || {sel:[], checked:false};
+    txt(t.titel,{size:11.5,bold:true});
+    if(!st.checked){ txt("Nog niet gecontroleerd.",{size:10,color:[150,150,150],gap:3}); return; }
+    const chunks=getChunks(t);
+    chunks.forEach(c=>{
+      const sel=st.sel.includes(c.id);
+      if(!sel && !c.k) return;
+      const tag = sel&&c.k?"[goed]  ":sel?"[bijzaak]  ":"[gemist]  ";
+      const col = sel&&c.k?[46,125,50]:sel?[198,40,40]:[239,108,0];
+      txt(tag+c.t.trim(),{size:10,color:col,indent:3,gap:1});
+    });
+    y+=3;
+  });
+  line();
+
+  txt("Leg-uit-vragen",{size:14,bold:true,color:[11,79,108],gap:3});
+  par.vragen.forEach((q,qi)=>{
+    const st=ps.q[q.id] || {sel:[], done:false, expl:[], concl:"", passed:false};
+    const labels=pwLabels(q);
+    need(30);
+    txt(`Vraag ${qi+1}${st.done?" (afgerond)":""}`,{size:11.5,bold:true,color:[194,24,91],gap:1});
+    txt(q.text.replace(/[{}]/g,""),{size:11,bold:true});
+    const chunks=parseQuestion(q.text);
+    const chosen=st.sel.map(i=>chunks[i]&&chunks[i].t).filter(Boolean);
+    txt("Gekozen puntwoorden: "+(chosen.length?chosen.join(", "):"-")+(st.pwOk?"  (goed)":st.tries>=2?"  (na hulp)":""),{size:10,color:[90,90,90]});
+    txt("Uitleg puntwoorden:",{size:10.5,bold:true,gap:0.5});
+    labels.forEach((l,i)=>txt(`- ${l}: ${(st.expl[i]||"").trim()||"(niet ingevuld)"}`,{size:10.5,indent:3,gap:0.8}));
+    txt("Conclusie: "+((st.concl||"").trim()||"(niet ingevuld)"),{size:10.5,bold:false,gap:1.5});
+    if(st.passed) txt("Modelantwoord: "+stripHtml(q.model),{size:9.5,color:[110,110,110],gap:4});
+    else y+=3;
+  });
+
+  const pages=doc.getNumberOfPages();
+  for(let p=1;p<=pages;p++){ doc.setPage(p); doc.setFontSize(8); doc.setTextColor(150); doc.text(`${state.naam||""} - ${par.titel} - pagina ${p} / ${pages}`,M,290); }
+  doc.save(fileBase(pid)+".pdf");
+  toast(`PDF van paragraaf ${pid} gedownload`);
+}
+
+/* =========================================================
+   INIT
+   ========================================================= */
+function renderAll(){
+  document.getElementById("studentName").value=state.naam||"";
+  renderOverzicht();
+  fcBuildDeck();
+  renderHL();
+  renderQ();
+  renderProgress();
+}
+
+try{
+  const s=localStorage.getItem(STORE_KEY);
+  if(s) state=Object.assign(freshState(), JSON.parse(s));
+}catch(e){}
+
+renderAll();
+window.addEventListener("beforeunload", e=>{ qInputSafe(); persist(); });
+</script>
+</body>
+</html>
